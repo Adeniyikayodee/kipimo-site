@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en" data-site="static">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kipimo</title>
+<style>
+:root {
+  --bg: #000;
+  --surface: #1c1c1e;
+  --surface-2: #2c2c2e;
+  --fill: rgba(118, 118, 128, .24);
+  --fill-2: rgba(118, 118, 128, .14);
+  --sep: rgba(84, 84, 88, .55);
+  --label: #f5f5f7;
+  --label-2: rgba(235, 235, 245, .62);
+  --label-3: rgba(235, 235, 245, .32);
+  --blue: #0a84ff;
+  --green: #30d158;
+  --orange: #ff9f0a;
+  --red: #ff453a;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+  --mono: "SF Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--label); font: 13px/1.45 var(--sans); font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; letter-spacing: -.005em; }
+body { display: grid; grid-template-rows: auto 1fr auto; height: 100vh; overflow: hidden; }
+button, select, input { font: inherit; color: inherit; }
+.mono { font-variant-numeric: tabular-nums; }
+.muted { color: var(--label-2); }
+
+header { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--sep); flex-wrap: wrap; position: relative; z-index: 2; }
+.brand { font-size: 17px; font-weight: 600; letter-spacing: -.02em; margin-right: 4px; }
+.group { display: flex; align-items: center; gap: 8px; }
+.group label { color: var(--label-2); }
+select, .btn { background: var(--fill); border: 0; border-radius: 8px; padding: 5px 12px; cursor: pointer; transition: background .15s; }
+select { padding-right: 8px; }
+select:hover, .btn:hover { background: rgba(118, 118, 128, .34); }
+#policy { max-width: 200px; }
+.btn.primary { background: var(--blue); color: #fff; font-weight: 600; }
+.btn.primary:hover { background: #409cff; }
+.btn.on { background: rgba(255, 159, 10, .2); color: var(--orange); }
+.seg { display: inline-flex; background: var(--fill); border-radius: 9px; padding: 2px; gap: 2px; }
+.seg button { background: transparent; border: 0; border-radius: 7px; padding: 3px 11px; cursor: pointer; color: var(--label-2); font-weight: 500; }
+.seg button.active { background: #636366; color: var(--label); box-shadow: 0 2px 6px rgba(0, 0, 0, .35); }
+#link button.active[data-v="online"] { color: var(--green); }
+#link button.active[data-v="degraded"] { color: var(--orange); }
+#link button.active[data-v="offline"] { color: var(--red); }
+input[type=range] { width: 100px; accent-color: var(--blue); }
+.totals { margin-left: auto; display: flex; gap: 22px; }
+.totals span { display: flex; flex-direction: column; align-items: flex-end; color: var(--label-2); font-size: 11px; }
+.totals b { color: var(--label); font-size: 17px; font-weight: 600; letter-spacing: -.02em; }
+@media (max-width: 1600px) { .group label { display: none; } }
+
+main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(420px, 1fr); gap: 12px; padding: 12px; min-height: 0; overflow: hidden; }
+.panel { background: var(--surface); border-radius: 14px; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.panel h2 { margin: 0; padding: 12px 14px 8px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; display: flex; align-items: center; gap: 12px; }
+.panel h2 .note { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--label-2); }
+.panel h2 .seg { font-size: 12px; }
+
+.cond { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 0 14px 12px; color: var(--label-2); font-size: 12px; align-items: center; }
+.cond b { color: var(--label); font-weight: 600; font-size: 13px; margin-left: 6px; }
+.cond b.warn { color: var(--orange); } .cond b.bad { color: var(--red); }
+.meter { display: inline-block; width: 56px; height: 4px; margin-left: 8px; border-radius: 2px; background: var(--fill); overflow: hidden; vertical-align: middle; }
+.meter i { display: block; height: 100%; }
+.spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; margin-left: 8px; vertical-align: middle; }
+.spark i { width: 5px; border-radius: 1px; }
+#mapWrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 12px 8px; }
+canvas#map { background: #111113; border-radius: 10px; }
+#overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--label-2); font-size: 15px; pointer-events: none; }
+#status { margin: 0 12px; padding: 8px 12px; border-radius: 10px; background: var(--fill-2); color: var(--label); min-height: 34px; font-size: 13px; }
+#status:empty { visibility: hidden; }
+.legend { display: flex; align-items: center; gap: 6px; padding: 8px 14px 12px; color: var(--label-2); font-size: 12px; flex-wrap: wrap; }
+.ramp { width: 110px; height: 6px; border-radius: 3px; }
+.key { display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; }
+.sw { width: 14px; height: 0; display: inline-block; }
+
+#right { display: grid; grid-template-rows: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, .7fr); gap: 12px; min-height: 0; }
+.scroll { overflow-y: auto; min-height: 0; flex: 1; }
+.scroll::-webkit-scrollbar { width: 6px; }
+.scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .18); border-radius: 3px; }
+
+#log { padding: 0 0 8px; }
+.ev { display: grid; grid-template-columns: 42px 58px 1fr; gap: 8px; padding: 5px 14px; }
+.ev + .ev { border-top: 1px solid rgba(84, 84, 88, .3); }
+.ev .t { color: var(--label-3); }
+.ev .src { color: var(--label-2); font-weight: 500; }
+.ev.agent .src { color: var(--blue); }
+.ev.think .msg { color: var(--label-2); }
+.ev .fn { font: 500 12px var(--mono); margin-right: 6px; color: var(--label); }
+.ev .why { display: block; color: var(--label-2); }
+.ev.ok .src { color: var(--green); }
+.ev.warn .src, .ev.warn b { color: var(--orange); }
+.ev.bad .src, .ev.bad b { color: var(--red); }
+.ev b { font-weight: 600; }
+#log[data-f="field"] .ev:not([data-r="field"]), #log[data-f="farmer"] .ev:not([data-r="farmer"]),
+#log[data-f="adjuster"] .ev:not([data-r="adjuster"]), #log[data-f="system"] .ev:not([data-r="system"]) { display: none; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th { position: sticky; top: 0; background: var(--surface); color: var(--label-2); font-weight: 400; text-align: left; padding: 4px 6px 6px; border-bottom: 1px solid var(--sep); }
+th:first-child, td:first-child { padding-left: 14px; }
+th:last-child, td:last-child { padding-right: 14px; }
+@media (max-width: 1500px) { .crop { display: none; } }
+td { padding: 6px 6px; border-bottom: 1px solid rgba(84, 84, 88, .3); white-space: nowrap; }
+.num { text-align: right; }
+tr.focus td { background: rgba(10, 132, 255, .12); }
+.bar, .ci { position: relative; width: 56px; height: 4px; background: var(--fill); border-radius: 2px; }
+.bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; }
+.bar .gate { position: absolute; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--label); }
+.ci i { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: rgba(255, 159, 10, .45); }
+.ci b { position: absolute; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--label); }
+.st-paid { color: var(--green); font-weight: 500; }
+.st-refused { color: var(--orange); font-weight: 500; }
+.st-surveying { color: var(--blue); font-weight: 500; }
+
+#claims { padding: 0 0 8px; }
+.claim { display: grid; grid-template-columns: 44px 1fr auto 86px; gap: 4px 12px; align-items: baseline; padding: 7px 14px; }
+.steps { grid-column: 2 / 5; display: flex; flex-wrap: wrap; gap: 4px; }
+.step { font-size: 11px; padding: 1px 7px; border-radius: 6px; background: var(--fill-2); color: var(--label-2); }
+.step.ok { color: var(--green); } .step.warn { color: var(--orange); } .step.bad { color: var(--red); }
+.claim + .claim { border-top: 1px solid rgba(84, 84, 88, .3); }
+.claim .id { font: 500 12px var(--mono); color: var(--label-2); }
+.claim .amt { font-weight: 600; }
+.claim .pkt { text-align: right; font-size: 12px; }
+.pkt.queued { color: var(--orange); }
+.pkt.sent { color: var(--green); }
+.empty { padding: 6px 14px; color: var(--label-2); }
+
+footer { display: flex; gap: 0; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--sep); overflow-x: auto; padding: 0 4px; }
+.stat { padding: 8px 14px; min-width: 120px; }
+.stat + .stat { border-left: 1px solid rgba(84, 84, 88, .35); }
+.stat small { display: block; color: var(--label-2); font-size: 11px; }
+.stat strong { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.stat .sub { color: var(--label-3); font-size: 11px; }
+.batt { width: 72px; height: 4px; background: var(--fill); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.batt i { display: block; height: 100%; background: var(--green); }
+.state-online { color: var(--green); }
+.state-degraded { color: var(--orange); }
+.state-offline { color: var(--red); }
+
+[hidden] { display: none !important; }
+#mctl { display: contents; }
+.views main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(420px, 1fr); gap: 12px; padding: 12px; min-height: 0; }
+#dmapWrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 4px 12px 12px; }
+canvas#dmap { background: #111113; border-radius: 10px; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 4px 14px 12px; }
+.kv span:nth-child(odd) { color: var(--label-2); }
+.kv b { font-weight: 600; text-align: right; }
+.kv small { color: var(--label-3); font-weight: 400; margin-left: 6px; }
+.queue { padding: 2px 14px 10px; color: var(--label-2); }
+.queue b { color: var(--label); font-weight: 600; margin-right: 6px; }
+#v-evals { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); align-content: start; overflow-y: auto; }
+.banner { grid-column: 1 / -1; padding: 10px 14px; border-radius: 12px; background: var(--fill-2); color: var(--label-2); }
+.banner b { color: var(--orange); font-weight: 600; }
+.big { font-size: 28px; font-weight: 600; letter-spacing: -.02em; padding: 0 14px; color: var(--green); }
+@media (max-width: 1100px) {
+  body { height: auto; overflow: auto; }
+  main { grid-template-columns: 1fr; }
+  #right { grid-template-rows: 420px 360px 260px; }
+  #mapWrap { height: 70vh; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Kipimo</div>
+  <div class="seg" id="view"><button class="active" data-v="mission">Mission</button><button data-v="district">District</button><button data-v="evals">Evals</button></div>
+  <div id="mctl">
+  <div class="group">
+    <label for="scenario">Scenario</label>
+    <select id="scenario"></select>
+  </div>
+  <div class="group">
+    <label for="policy">Pilot</label>
+    <select id="policy">
+      <option value="agents">AI agents: field, farmer, adjuster</option>
+      <option value="agent">AI agent</option>
+      <option value="infogain">Planner</option>
+      <option value="lawnmower">Lawnmower</option>
+    </select>
+    <button class="btn primary" id="start">Start</button>
+    <button class="btn" id="pause">Pause</button>
+  </div>
+  <div class="group">
+    <label>Speed</label>
+    <input type="range" id="speed" min="1" max="20" step="1" value="10">
+    <span id="speedv" class="muted" style="width: 28px">10x</span>
+  </div>
+  <div class="group">
+    <label>Link</label>
+    <div class="seg" id="link">
+      <button data-v="online" class="active">Online</button>
+      <button data-v="degraded">Degraded</button>
+      <button data-v="offline">Offline</button>
+    </div>
+  </div>
+  <button class="btn" id="degrade">Degrade camera</button>
+  <div class="totals">
+    <span>Claims<b id="hPaid">0</b></span>
+    <span>Paid<b id="hAmount">KES 0</b></span>
+    <span>Flown<b id="hDist">0.0 km</b></span>
+  </div>
+  </div>
+</header>
+
+<div class="views" style="display: contents">
+<main id="v-mission">
+  <section class="panel">
+    <h2>Map
+      <span class="seg" id="layers">
+        <button class="active" data-l="belief">Loss estimate</button>
+        <button data-l="voi">Survey value</button>
+        <button data-l="truth">True loss</button>
+      </span>
+      <span class="note" id="mapNote"></span>
+    </h2>
+    <div class="cond" id="cond"></div>
+    <div id="mapWrap">
+      <canvas id="map"></canvas>
+      <div id="overlay">No mission running. Pick a scenario and pilot, then Start.</div>
+    </div>
+    <div id="status"></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section id="right">
+    <div class="panel">
+      <h2>Log
+        <span class="seg" id="logf">
+          <button class="active" data-f="all">All</button><button data-f="field">Field</button><button data-f="farmer">Farmer</button><button data-f="adjuster">Adjuster</button><button data-f="system">System</button>
+        </span>
+      </h2>
+      <div class="scroll" id="traceScroll"><div id="log"></div></div>
+    </div>
+    <div class="panel">
+      <h2>Parcels <span class="note">by money at risk, gate <span id="gateV">0.80</span></span></h2>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Parcel</th><th>Farmer</th><th>Loss, 95% CI</th><th>Confidence</th><th class="num">At risk</th><th class="num">Payout</th><th></th></tr></thead>
+          <tbody id="parcels"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Claims <span class="note" id="claimNote"></span></h2>
+      <div class="scroll" id="claims"></div>
+    </div>
+  </section>
+</main>
+
+<main id="v-district" hidden>
+  <section class="panel">
+    <h2>District <select id="dseed"></select><span class="note" id="dnote"></span></h2>
+    <div id="dmapWrap"><canvas id="dmap"></canvas></div>
+    <div class="legend">
+      <span class="key"><i class="sw" style="border-top: 6px solid var(--orange); width: 10px"></i>flooded village, size is money expected</span>
+      <span class="key"><i class="sw" style="border-top: 1px dashed var(--blue)"></i>one battery's reach</span>
+      <span class="key"><i class="sw" style="border-top: 2px solid var(--red)"></i>out of reach</span>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Dispatch <span class="seg" id="dplan"><button class="active" data-p="greedy">Greedy</button><button data-p="nearest">Nearest hub</button></span></h2>
+    <div class="scroll"><div class="kv" id="dstats"></div><div id="dqueues"></div></div>
+  </section>
+</main>
+
+<main id="v-evals" hidden></main>
+</div>
+
+<footer>
+  <div class="stat"><small>Battery</small><strong id="fBatt">-</strong><div class="batt"><i id="fBattBar" style="width: 100%"></i></div></div>
+  <div class="stat"><small>Distance</small><strong id="fDist">0.00 km</strong><div class="sub" id="fSortie"></div></div>
+  <div class="stat"><small>Camera</small><strong id="fSensor">-</strong><div class="sub" id="fQual"></div></div>
+  <div class="stat"><small>Inference</small><strong id="fLat">-</strong><div class="sub" id="fModel"></div></div>
+  <div class="stat"><small>Link</small><strong id="fLink" class="state-online">online</strong><div class="sub" id="fQueue">queue 0</div></div>
+  <div class="stat"><small>Sent</small><strong id="fBytes">0 B</strong><div class="sub" id="fPkt"></div></div>
+  <div class="stat"><small>Event log</small><strong id="fChain">0 events</strong><div class="sub" id="fHead">-</div></div>
+  <div class="stat"><small>Sim time</small><strong id="fTime">00:00</strong><div class="sub" id="fPolicy"></div></div>
+</footer>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const fmtKES = (v) => "KES " + Math.round(v).toLocaleString("en-US");
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const words = (s) => String(s).replace(/_/g, " ");
+const b64u8 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const clock = (t) => { t = Math.max(0, Math.round(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
+const PILOT = { agents: "3 agents", agent: "agent", infogain: "planner", lawnmower: "lawnmower" };
+const who = (d) => d.role && d.role !== "field" ? d.role : "agent";
+
+// ---------- state ----------
+let S;
+function fresh() {
+  S = {
+    world: null, pmap: null, truth: null, frame: null, layers: {},
+    path: [], pose: null, alt: 40, battery: null, battery0: null, distance: 0, quality: null,
+    lanes: [], focus: new Set(), claims: new Map(), refused: new Map(), cases: new Map(), paidTotal: 0,
+    uplink: { state: "online", depth: 0, bytes: 0, settled: 0, pkt: 0 },
+    perception: null, sensorDegraded: false, events: 0, head: "", t: 0, policy: "", gate: 0.8,
+    sortieStart: 0, done: false,
+  };
+}
+fresh();
+let layer = "belief";
+let dirty = true;
+let pmapCanvas = null;
+
+// ---------- colour ramps (sequential, light to dark) ----------
+function ramp(stops) {
+  return (v) => {
+    for (let i = 1; i < stops.length; i++) {
+      if (v <= stops[i][0]) {
+        const [a, ca] = stops[i - 1], [b, cb] = stops[i], f = (v - a) / (b - a);
+        return ca.map((c, k) => c + (cb[k] - c) * f);
+      }
+    }
+    return stops[stops.length - 1][1];
+  };
+}
+const lossColor = ramp([[0, [42, 48, 44]], [0.35, [104, 84, 48]], [0.65, [214, 128, 40]], [1, [255, 196, 128]]]);
+const voiColor = ramp([[0, [26, 26, 28]], [0.3, [16, 58, 112]], [0.65, [10, 132, 255]], [1, [170, 214, 255]]]);
+function gridCanvas(u8, n, colorFn, alphaU8, alphaMin) {
+  const c = document.createElement("canvas"); c.width = n; c.height = n;
+  const g = c.getContext("2d"), img = g.createImageData(n, n);
+  for (let i = 0; i < n * n; i++) {
+    const v = u8[i] / 255, [r, gr, b] = colorFn(v);
+    img.data[i * 4] = r; img.data[i * 4 + 1] = gr; img.data[i * 4 + 2] = b;
+    const a = alphaU8 ? alphaMin + (1 - alphaMin) * (alphaU8[i] / 255) : 1;
+    img.data[i * 4 + 3] = Math.round(255 * a);
+  }
+  g.putImageData(img, 0, 0);
+  return c;
+}
+
+// ---------- map ----------
+const cv = $("map"), ctx = cv.getContext("2d");
+let size = 600, dpr = 1;
+function resize() {
+  const wrap = $("mapWrap");
+  size = Math.max(280, Math.min(wrap.clientWidth - 16, wrap.clientHeight - 16));
+  dpr = window.devicePixelRatio || 1;
+  cv.width = size * dpr; cv.height = size * dpr;
+  cv.style.width = size + "px"; cv.style.height = size + "px";
+  pmapCanvas = null; dirty = true;
+}
+window.addEventListener("resize", resize);
+
+function buildParcelLines() {
+  const n = S.world.map_px, pm = S.pmap;
+  const c = document.createElement("canvas"); c.width = size * dpr; c.height = size * dpr;
+  const g = c.getContext("2d"), k = (size * dpr) / n;
+  g.strokeStyle = "rgba(255,255,255,0.2)"; g.lineWidth = Math.max(1, dpr);
+  g.beginPath();
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const v = pm[y * n + x];
+    if (x + 1 < n && pm[y * n + x + 1] !== v) { g.moveTo((x + 1) * k, y * k); g.lineTo((x + 1) * k, (y + 1) * k); }
+    if (y + 1 < n && pm[(y + 1) * n + x] !== v) { g.moveTo(x * k, (y + 1) * k); g.lineTo((x + 1) * k, (y + 1) * k); }
+  }
+  g.stroke();
+  pmapCanvas = c;
+}
+
+const INK = "#f5f5f7", PAPER = "#1c1c1e", BLUE = "10,132,255", GREEN = "#30d158", OCHRE = "#ff9f0a", RED = "255,69,58";
+function draw() {
+  dirty = false;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#111113"; ctx.fillRect(0, 0, cv.width, cv.height);
+  const W = S.world;
+  if (!W) return;
+  const px = (size * dpr) / W.span_m; // world metres -> device pixels
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  const L = S.layers;
+  const base = layer === "truth" ? L.truth : layer === "voi" ? L.voi : L.belief;
+  if (base) ctx.drawImage(base, 0, 0, cv.width, cv.height);
+  if (layer === "voi" && L.observed) { ctx.globalAlpha = 0.18; ctx.drawImage(L.observed, 0, 0, cv.width, cv.height); ctx.globalAlpha = 1; }
+  if (!pmapCanvas && S.pmap) buildParcelLines();
+  if (pmapCanvas) ctx.drawImage(pmapCanvas, 0, 0);
+
+  // geofence
+  const [fx0, fy0, fx1, fy1] = W.fence;
+  ctx.setLineDash([5 * dpr, 4 * dpr]); ctx.strokeStyle = "rgba(235,235,245,0.35)"; ctx.lineWidth = dpr;
+  ctx.strokeRect(fx0 * px, fy0 * px, (fx1 - fx0) * px, (fy1 - fy0) * px); ctx.setLineDash([]);
+
+  // no fly zones
+  for (const z of W.no_fly) {
+    ctx.beginPath(); ctx.arc(z.x * px, z.y * px, z.r * px, 0, 2 * Math.PI);
+    ctx.fillStyle = `rgba(${RED},0.10)`; ctx.fill();
+    ctx.strokeStyle = `rgba(${RED},0.9)`; ctx.lineWidth = 1.2 * dpr; ctx.stroke();
+    ctx.save(); ctx.clip();
+    ctx.strokeStyle = `rgba(${RED},0.45)`; ctx.lineWidth = dpr;
+    for (let d = -z.r * 2; d < z.r * 2; d += 8) { ctx.beginPath(); ctx.moveTo((z.x + d - z.r) * px, (z.y + z.r) * px); ctx.lineTo((z.x + d + z.r) * px, (z.y - z.r) * px); ctx.stroke(); }
+    ctx.restore();
+    label("no fly: " + words(z.name || ""), z.x * px, (z.y + z.r) * px + 13 * dpr, `rgb(${RED})`, 11);
+  }
+
+  // planned lanes and the active swath
+  ctx.setLineDash([4 * dpr, 4 * dpr]); ctx.lineWidth = dpr; ctx.strokeStyle = `rgba(${BLUE},0.7)`;
+  for (const ln of S.lanes) { ctx.beginPath(); ctx.moveTo(ln.a[0] * px, ln.a[1] * px); ctx.lineTo(ln.b[0] * px, ln.b[1] * px); ctx.stroke(); }
+  ctx.setLineDash([]);
+  if (S.activeLane && !S.done) {
+    const ln = S.activeLane; ctx.strokeStyle = `rgba(${BLUE},0.16)`; ctx.lineWidth = 2 * S.alt * S.world.fov_tan * px;
+    ctx.lineCap = "butt"; ctx.beginPath(); ctx.moveTo(ln.a[0] * px, ln.a[1] * px); ctx.lineTo(ln.b[0] * px, ln.b[1] * px); ctx.stroke();
+  }
+
+  // flown path
+  if (S.path.length > 1) {
+    ctx.beginPath(); ctx.moveTo(S.path[0][0] * px, S.path[0][1] * px);
+    for (const p of S.path) ctx.lineTo(p[0] * px, p[1] * px);
+    ctx.strokeStyle = "rgba(245,245,247,0.9)"; ctx.lineWidth = 1.5 * dpr; ctx.lineJoin = "round"; ctx.stroke();
+  }
+
+  // parcel markers
+  for (const p of W.parcels) {
+    const x = p.cx * px, y = p.cy * px;
+    const claimed = S.claims.has(p.id), refused = S.refused.has(p.id) && !claimed, focus = S.focus.has(p.id);
+    ctx.beginPath(); ctx.arc(x, y, 12 * dpr, 0, 2 * Math.PI);
+    ctx.fillStyle = "rgba(28,28,30,0.82)"; ctx.fill();
+    ctx.lineWidth = (claimed || refused || focus ? 2 : 1) * dpr;
+    ctx.strokeStyle = claimed ? GREEN : refused ? OCHRE : focus ? `rgb(${BLUE})` : "rgba(235,235,245,0.3)";
+    ctx.stroke();
+    label(p.id, x, y + 4 * dpr, INK, 10, true);
+  }
+
+  // home pad
+  const [hx, hy] = W.home;
+  ctx.fillStyle = INK; ctx.fillRect(hx * px - 7 * dpr, hy * px - 7 * dpr, 14 * dpr, 14 * dpr);
+  label("H", hx * px, hy * px + 4 * dpr, PAPER, 10, true);
+
+  // drone and camera footprint
+  if (S.pose) {
+    const { x, y, yaw } = S.pose, h = S.alt * W.fov_tan;
+    ctx.strokeStyle = S.sensorDegraded ? OCHRE : INK;
+    ctx.fillStyle = S.sensorDegraded ? "rgba(255,159,10,0.14)" : "rgba(255,255,255,0.08)";
+    ctx.lineWidth = dpr;
+    ctx.fillRect((x - h) * px, (y - h) * px, 2 * h * px, 2 * h * px);
+    ctx.strokeRect((x - h) * px, (y - h) * px, 2 * h * px, 2 * h * px);
+    ctx.save(); ctx.translate(x * px, y * px); ctx.rotate(yaw);
+    ctx.beginPath(); ctx.moveTo(10 * dpr, 0); ctx.lineTo(-7 * dpr, 6 * dpr); ctx.lineTo(-4 * dpr, 0); ctx.lineTo(-7 * dpr, -6 * dpr); ctx.closePath();
+    ctx.fillStyle = "#fff"; ctx.fill(); ctx.strokeStyle = "#000"; ctx.stroke();
+    ctx.restore();
+  }
+}
+function label(text, x, y, color, sz, bold) {
+  ctx.font = `${bold ? 600 : 400} ${sz * dpr}px -apple-system, "Segoe UI", sans-serif`;
+  ctx.textAlign = "center";
+  ctx.lineWidth = 3 * dpr; ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.lineJoin = "round"; ctx.strokeText(text, x, y);
+  ctx.fillStyle = color; ctx.fillText(text, x, y);
+}
+function loop() { if (dirty) draw(); requestAnimationFrame(loop); }
+
+function legend() {
+  const grad = (fn) => { const c = []; for (let i = 0; i <= 10; i++) { const [r, g, b] = fn(i / 10); c.push(`rgb(${r | 0},${g | 0},${b | 0}) ${i * 10}%`); } return `linear-gradient(90deg, ${c.join(",")})`; };
+  const keys = `<span class="key"><i class="sw" style="border-top: 2px solid ${INK}"></i>flown</span>
+    <span class="key"><i class="sw" style="border-top: 1px dashed rgb(${BLUE})"></i>planned</span>
+    <span class="key"><i class="sw" style="border-top: 2px solid ${GREEN}"></i>paid</span>
+    <span class="key"><i class="sw" style="border-top: 2px solid ${OCHRE}"></i>refused</span>`;
+  if (layer === "voi") {
+    $("legend").innerHTML = `Money at stake: low <span class="ramp" style="background:${grad(voiColor)}"></span> high ${keys}`;
+    $("mapNote").textContent = "payout money an observation could change";
+  } else {
+    $("legend").innerHTML = `Crop loss: 0% <span class="ramp" style="background:${grad(lossColor)}"></span> 100% ${keys}`;
+    $("mapNote").textContent = layer === "truth" ? "simulator only, the drone never sees this" : "dim where not yet surveyed";
+  }
+}
+
+// ---------- log ----------
+const ROLE = { agent: "field", planner: "field", envelope: "field", drone: "field", belief: "field", priors: "field", flight: "field", weather: "field",
+  farmer: "farmer", "sms in": "farmer", "sms out": "farmer", adjuster: "adjuster", payout: "adjuster" };
+function log(cls, src, html, t) {
+  const el = document.createElement("div");
+  el.className = "ev " + cls;
+  el.dataset.r = ROLE[src] || "system";
+  el.innerHTML = `<span class="t">${clock(t ?? S.t)}</span><span class="src">${src}</span><span class="msg">${html}</span>`;
+  const box = $("traceScroll"), stick = box.scrollTop + box.clientHeight >= box.scrollHeight - 30;
+  $("log").appendChild(el);
+  if (stick) box.scrollTop = box.scrollHeight;
+}
+function toolSummary(name, inp) {
+  if (name === "survey") return `<span class="fn">survey</span>${inp.parcel_ids.join(", ")} to ${(+inp.target_confidence).toFixed(2)}, max ${Math.round(inp.max_distance_m)} m<span class="why">${esc(inp.reason)}</span>`;
+  if (name === "issue_claim") return `<span class="fn">issue_claim</span>${inp.parcel_id}<span class="why">${esc(inp.justification)}</span>`;
+  if (name === "score_payout" || name === "get_priors") return `<span class="fn">${name}</span>${inp.parcel_id}`;
+  return `<span class="fn">${esc(name)}</span>`;
+}
+function status(text) { $("status").textContent = text; }
+
+// ---------- events ----------
+function onEvent(ev) {
+  const d = ev.data || {};
+  if (typeof ev.t === "number" && ev.seq >= 0) S.t = ev.t;
+  if (ev.hash) { S.events = ev.seq + 1; S.head = ev.hash; }
+  switch (ev.kind) {
+    case "HELLO": hello(d); return;
+    case "SESSION_RESET":
+      fresh(); $("log").innerHTML = ""; renderClaims(); S.policy = d.policy; $("overlay").style.display = "none";
+      if (d.replay) log("", "replay", `${esc(words(d.replay))}, recorded run`);
+      break;
+    case "EPISODE_START": S.policy = d.policy; break;
+    case "WORLD_INFO":
+      S.world = d; S.pmap = b64u8(d.parcel_map); pmapCanvas = null;
+      S.layers.truth = gridCanvas(b64u8(d.truth), d.grid, lossColor);
+      S.sensor = d.sensor;
+      status(S.policy === "agent" ? "Agent reading the parcel table" : "Ranking parcels by money at risk");
+      log("", "mission", `${d.parcels.length} parcels, pilot ${PILOT[S.policy] || S.policy}, camera ${d.sensor}`);
+      break;
+    case "FRAME": frame(d); break;
+    case "OBSERVATION":
+      S.pose = d.pose; S.alt = d.alt; S.battery = d.battery_wh; if (S.battery0 === null) S.battery0 = d.battery_wh;
+      S.distance = d.distance_m; S.quality = d.quality;
+      S.path.push([d.pose.x, d.pose.y]);
+      break;
+    case "PLAN_BATCH": {
+      S.lanes = (d.path || []).map(([a, b]) => ({ a, b })); S.focus = new Set(d.parcels);
+      if (S.policy !== "agent") log("", "planner", `${d.lanes} lanes over ${d.parcels.join(", ")}`);
+      status(`Surveying ${d.parcels.length > 6 ? d.parcels.length + " parcels" : d.parcels.join(", ")}`);
+      break;
+    }
+    case "PLAN_LANE": S.activeLane = { a: d.a, b: d.b }; break;
+    case "SURVEY_END": if (S.policy !== "agent") log("", "planner", `pass ended, ${words(d.reason)}`); break;
+    case "AGENT_START": log("agent", "agent", `${esc(d.model)}, limit ${d.max_tool_calls} tool calls`); break;
+    case "AGENT_THINKING": log("agent think", who(d), esc(d.text.length > 420 ? d.text.slice(0, 420) + "…" : d.text)); break;
+    case "AGENT_TEXT": log("agent", who(d), esc(d.text)); status(d.text.length > 140 ? d.text.slice(0, 140) + "…" : d.text); break;
+    case "AGENT_TOOL_CALL": log("agent", who(d), toolSummary(d.name, d.input)); if (d.name === "survey") { S.sortieStart = S.distance; S.focus = new Set(d.input.parcel_ids); } break;
+    case "AGENT_TOOL_RESULT": toolResult(d); break;
+    case "OBJECTIVE_ACCEPTED": log("", "envelope", `accepted, est. ${(d.estimated_distance_m / 1000).toFixed(2)} km`); break;
+    case "OBJECTIVE_REJECTED": log("bad", "envelope", `<b>rejected</b>: ${esc(d.reason)}`); break;
+    case "AGENT_BUDGET_EXHAUSTED": log("warn", "agent", `${d.tool_calls} tool calls used, planner takes over`); break;
+    case "AGENT_FALLBACK": log("warn", who(d), `model unavailable (${esc(words(d.reason))}), rules take over`); if (!d.role || d.role === "field" || d.role === "all") status("Model unavailable, rules flying"); break;
+    case "AGENT_REPORT": log("agent", "agent", esc(d.summary)); break;
+    case "SMS_RECEIVED": log("", "sms in", `${d.parcel} (${d.lang}): <i>${esc(d.text)}</i>`); break;
+    case "FARMER_REPORT": log(d.suspicious ? "bad" : d.conflict ? "warn" : "", "farmer", `${d.parcel} reports <b>${d.severity}</b>${d.where && d.where !== "unknown" ? ", " + words(d.where) : ""}${d.suspicious ? ", flagged suspicious" : ""}${d.discounted ? ", discounted: record of overstating" : d.doubted ? ", conflicts with estimate: flagged for a look" : ""}`); break;
+    case "FLIGHT_SET": log("", "flight", `${d.altitude_m} m, ${d.speed_mps} m/s, camera ${d.quality.toFixed(2)}<span class="why">${esc(d.reason)}</span>`); break;
+    case "WAITED": log("warn", "weather", `holding ${d.minutes} min at the pad${d.wind != null ? `, wind ${d.wind} m/s` : ""}<span class="why">${esc(d.reason)}</span>`); status(d.wind != null ? `Holding at the pad for the flight window, wind ${d.wind} m/s` : "Holding at the pad"); break;
+    case "CLAIM_ESCALATED": step(d.parcel, "with a person", "bad"); log("bad", "adjuster", `${d.parcel} <b>handed to a person</b> after ${d.rounds} rounds under ${esc(d.rule_id)}`); break;
+    case "MEMORY_UPDATED": log("", "memory", `learned from ${d.scored} settled reports, ${d.farmers} farmers on record`); break;
+    case "SMS_SENT": log("ok", "sms out", `${d.parcel}: ${esc(d.text)}`); break;
+    case "SMS_REJECTED": log("bad", "sms out", `${d.parcel}: <b>blocked</b>, quoted an amount not issued`); break;
+    case "CLAIM_REVIEW": step(d.parcel, d.decision === "approve" ? `approved, round ${d.round || 1}` : `challenged ${(d.rule_id || "").split("_")[0]}, round ${d.round || 1}`, d.decision === "approve" ? "" : "warn"); log(d.decision === "approve" ? "ok" : "warn", "adjuster", `${d.parcel} <b>${d.decision}</b>${d.rule_id ? " under " + esc(d.rule_id) : ""}${d.round > 1 ? `, round ${d.round}` : ""}`); break;
+    case "CHALLENGE_REJECTED": log("bad", "adjuster", `${d.parcel}: challenge under ${esc(d.rule_id)} <b>rejected</b>, rule does not hold`); break;
+    case "CLAIM_REFUSED": {
+      const sc = d.score || {};
+      if (d.reason === "insufficient_confidence") {
+        S.refused.set(d.parcel, sc.confidence);
+        step(d.parcel, `refused at gate ${(+sc.confidence).toFixed(2)}`, "warn");
+        log("warn", "payout", `<b>refused</b> ${d.parcel}: confidence ${(+sc.confidence).toFixed(2)}, gate ${(+sc.min_confidence).toFixed(2)}`);
+        status(`${d.parcel} refused on confidence, surveying again`);
+      } else log("", "payout", `${d.parcel} not issued, ${words(d.reason)}`);
+      break;
+    }
+    case "CLAIM_ISSUED": {
+      const c = d.claim; S.claims.set(c.parcel_id, { ...c, status: "queued", bytes: null }); S.paidTotal += c.amount;
+      step(c.parcel_id, "signed", "ok");
+      log("ok", "payout", `signed ${c.claim_id}, ${esc(c.holder)}, <b>${fmtKES(c.amount)}</b> (tier ${Math.round(c.tier * 100)}%, confidence ${c.confidence.toFixed(2)})`);
+      renderClaims(); break;
+    }
+    case "UPLINK_QUEUED": { const c = claimById(d.claim_id); if (c) { c.bytes = d.bytes; c.status = "queued"; } S.uplink.depth = d.depth; S.uplink.pkt = Math.max(S.uplink.pkt, d.bytes); renderClaims(); break; }
+    case "UPLINK_SENT": { const c = claimById(d.claim_id); if (c) c.status = "sent"; S.uplink.depth = d.depth; S.uplink.bytes = d.total_bytes; S.uplink.settled++; renderClaims(); break; }
+    case "LINK_STATE":
+      S.uplink.state = d.state; S.uplink.depth = d.depth; setLinkButtons(d.state);
+      if (d.state === "offline") log("bad", "link", "<b>offline</b>, claims will queue");
+      else if (d.state === "degraded") log("warn", "link", "<b>degraded</b>, retrying in order");
+      else log("ok", "link", `online, sending ${d.depth} queued`);
+      break;
+    case "SENSOR_STATE":
+      S.sensorDegraded = d.degraded; $("degrade").classList.toggle("on", d.degraded);
+      log(d.degraded ? "warn" : "", "camera", d.degraded ? "<b>degraded</b>, quality 0.30" : "restored");
+      break;
+    case "DEGRADED_SENSOR_REPLAN": log("warn", "planner", `replanned for camera quality ${(+d.quality).toFixed(2)}`); break;
+    case "RETURN_TO_HOME": log("warn", "planner", `returning home, ${esc(words(d.reason))}`); break;
+    case "EPISODE_END":
+      if (!SITE) loadRecordings();
+      S.done = true; S.focus = new Set(); S.lanes = []; S.activeLane = null;
+      log("ok", "mission", `done, ${(d.distance_m / 1000).toFixed(2)} km, ${d.claims} claims, payout error ${d.payout_mae_pct.toFixed(2)}% of sum insured`);
+      status(`Done. ${d.claims} claims, ${(d.distance_m / 1000).toFixed(1)} km flown`);
+      break;
+  }
+  dirty = true;
+}
+function step(pid, text, tone) {
+  const c = S.cases.get(pid) || { steps: [] };
+  S.cases.delete(pid);
+  c.steps.push({ text, tone });
+  S.cases.set(pid, c);
+  renderClaims();
+}
+function claimById(id) { for (const c of S.claims.values()) if (c.claim_id === id) return c; return null; }
+function toolResult(d) {
+  const r = d.result || {};
+  if (r.error) { log("bad", "agent", `<b>${esc(d.name)}</b>: ${esc(r.error)}`); return; }
+  if (d.name === "survey" && r.accepted) {
+    const ps = r.parcels.map((p) => `${p.id} ${p.confidence.toFixed(2)}`).join(", ");
+    log("", "drone", `flew ${(r.flown_m / 1000).toFixed(2)} km, ${words(r.stop_reason)}. ${ps}`);
+  } else if (d.name === "get_situation") {
+    log("", "belief", "top at risk: " + r.parcels.slice(0, 3).map((p) => `${p.id} ${fmtKES(p.money_at_risk)}`).join(", "));
+  } else if (d.name === "score_payout") {
+    log("", "payout", `${r.parcel_id} tier ${Math.round(r.tier * 100)}%, ${fmtKES(r.amount)}, gate ${r.gate}`);
+  } else if (d.name === "get_priors") {
+    log("", "priors", `${r.parcel_id} rain +${r.rainfall_anomaly_mm} mm, NDVI ${r.ndvi_delta}, radar loss ${r.radar_loss_prior}`);
+  }
+}
+function frame(d) {
+  S.frame = d; S.gate = d.situation.gate_min_confidence; $("gateV").textContent = S.gate.toFixed(2);
+  const n = S.world ? S.world.grid : 64;
+  S.layers.belief = gridCanvas(b64u8(d.mean), n, lossColor, b64u8(d.observed), 0.35);
+  S.layers.voi = gridCanvas(b64u8(d.voi), n, voiColor);
+  const obs = b64u8(d.observed); S.layers.observed = gridCanvas(obs, n, () => [255, 255, 255], obs, 0);
+  S.perception = d.perception; S.uplink = { ...S.uplink, ...d.uplink, bytes: d.uplink.bytes_sent, pkt: d.uplink.packet_bytes };
+  setLinkButtons(d.uplink.state);
+  renderParcels();
+  conditions(d.conditions);
+}
+function conditions(c) {
+  if (!c) return;
+  const w = c.weather, f = c.flight, cam = c.camera;
+  const cls = (v, warn, bad) => (v >= bad ? "bad" : v >= warn ? "warn" : "");
+  const tone = { "": "var(--green)", warn: "var(--orange)", bad: "var(--red)" };
+  let wind = '<span>Wind<b>no forecast loaded</b></span>';
+  if (w) {
+    const k = cls(w.wind_mps / w.limit_mps, 0.8, 1);
+    const bars = w.calm_share_next_hours.map((p) => `<i style="height:${Math.max(2, p * 14)}px;background:${p >= 0.95 ? "var(--green)" : "var(--label-3)"}"></i>`).join("");
+    const when = w.next_window_in_min == null ? "no window in range" : w.next_window_in_min === 0 ? "flyable now" : `window in ${Math.floor(w.next_window_in_min / 60)} h ${w.next_window_in_min % 60} min`;
+    wind = `<span>Wind<b class="${k}">${w.wind_mps.toFixed(1)} / ${w.limit_mps} m/s</b><span class="meter"><i style="width:${Math.min(100, (100 * w.wind_mps) / w.limit_mps)}%;background:${tone[k]}"></i></span></span>
+      <span>Forecast<span class="spark">${bars}</span><b>${when}</b></span>`;
+  }
+  $("cond").innerHTML = `${wind}<span>Flight<b>${f.altitude_m} m, ${f.speed_mps} m/s</b></span>
+    <span>Camera<b class="${cam.degraded ? "warn" : ""}">${cam.quality.toFixed(2)}${cam.degraded ? ", degraded" : ""}</b></span>`;
+}
+function renderParcels() {
+  const f = S.frame; if (!f) return;
+  const W = S.world, holders = {}; if (W) for (const p of W.parcels) holders[p.id] = p.holder;
+  $("parcels").innerHTML = f.situation.parcels.map((p) => {
+    const conf = p.confidence, gate = S.gate, pass = conf >= gate;
+    const claimed = S.claims.has(p.id), refused = S.refused.has(p.id) && !claimed, focus = S.focus.has(p.id);
+    const st = claimed ? "paid" : refused ? "refused" : focus ? "surveying" : "";
+    const lo = p.ci95[0] * 100, hi = p.ci95[1] * 100;
+    return `<tr class="${focus ? "focus" : ""}"><td><b>${p.id}</b> <span class="muted crop">${p.crop}</span></td><td>${esc(holders[p.id] || "")}</td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="ci"><i style="left:${lo}%;width:${Math.max(1, hi - lo)}%"></i><b style="left:${p.loss * 100}%"></b></div><span class="mono">${Math.round(p.loss * 100)}%</span></div></td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="bar"><i style="width:${conf * 100}%;background:${pass ? "var(--green)" : "rgba(235,235,245,0.45)"}"></i><span class="gate" style="left:${gate * 100}%"></span></div><span class="mono" style="color:${pass ? "var(--green)" : "inherit"}">${conf.toFixed(2)}</span></div></td>
+      <td class="num">${p.money_at_risk ? fmtKES(p.money_at_risk) : '<span class="muted">-</span>'}</td>
+      <td class="num">${p.payout_at_estimate ? fmtKES(p.payout_at_estimate) : '<span class="muted">0</span>'}</td><td class="st-${st}">${st}</td></tr>`;
+  }).join("");
+}
+function renderClaims() {
+  const rows = [...S.cases.entries()].reverse();
+  const sent = [...S.claims.values()].filter((c) => c.status === "sent").length;
+  $("claimNote").textContent = S.claims.size ? `${S.claims.size} signed, ${sent} sent` : rows.length ? `${rows.length} open` : "";
+  $("claims").innerHTML = rows.length ? rows.map(([pid, k]) => {
+    const c = S.claims.get(pid), held = k.steps.at(-1).tone === "bad";
+    const state = c ? `<span class="pkt ${c.status}">${c.bytes ? c.bytes + " B " : ""}${c.status}</span>` : `<span class="pkt ${held ? "" : "queued"}">${held ? "review" : "open"}</span>`;
+    const name = S.world ? S.world.parcels.find((p) => p.id === pid)?.holder || "" : "";
+    return `<div class="claim"><span class="id">${pid}</span><span>${esc(name)}</span>
+      <span class="amt">${c ? fmtKES(c.amount) : ""}</span>${state}
+      <div class="steps">${k.steps.map((x) => `<span class="step ${x.tone}">${x.text}</span>`).join("")}</div></div>`;
+  }).join("") : '<div class="empty">None yet.</div>';
+  $("hPaid").textContent = S.claims.size;
+  $("hAmount").textContent = fmtKES(S.paidTotal);
+}
+function footer() {
+  const b = S.battery, b0 = S.battery0 || 1;
+  $("fBatt").textContent = b == null ? "-" : b.toFixed(1) + " Wh";
+  $("fBattBar").style.width = (b == null ? 100 : (100 * b) / b0) + "%";
+  $("fBattBar").style.background = b != null && b / b0 < 0.25 ? "var(--red)" : b != null && b / b0 < 0.5 ? "var(--orange)" : "var(--green)";
+  $("fDist").textContent = (S.distance / 1000).toFixed(2) + " km";
+  $("hDist").textContent = (S.distance / 1000).toFixed(1) + " km";
+  $("fSortie").textContent = S.world && S.policy === "agent" ? `sortie cap ${(S.world.sortie_m / 1000).toFixed(1)} km` : "";
+  $("fSensor").textContent = S.sensor ? (S.sensorDegraded ? "degraded" : S.sensor) : "-";
+  $("fSensor").style.color = S.sensorDegraded ? "var(--orange)" : "";
+  $("fQual").textContent = S.quality != null ? `quality ${S.quality.toFixed(2)}` : "";
+  const P = S.perception;
+  $("fLat").textContent = P && P.n ? `${P.p50_ms.toFixed(2)} / ${P.p95_ms.toFixed(2)} ms` : S.sensor === "classical" ? "classical" : "-";
+  $("fModel").textContent = P ? `p50 / p95, int8 ${P.model_mb.toFixed(2)} MB, ${P.n.toLocaleString()} tiles` : "";
+  const u = S.uplink;
+  $("fLink").textContent = u.state; $("fLink").className = "state-" + u.state;
+  $("fQueue").textContent = `queue ${u.depth}, delivered ${u.settled}`;
+  $("fBytes").textContent = (u.bytes || 0).toLocaleString() + " B";
+  $("fPkt").textContent = u.pkt ? `${u.pkt} B per claim, SMS max 140` : "";
+  $("fChain").textContent = S.events.toLocaleString() + " events";
+  $("fHead").textContent = S.head ? "head " + S.head.slice(0, 12) : "-";
+  $("fTime").textContent = clock(S.t);
+  $("fPolicy").textContent = PILOT[S.policy] || "";
+}
+setInterval(footer, 200);
+
+// ---------- controls ----------
+// On the static site there is no server: recorded runs replay here instead.
+const SITE = document.documentElement.dataset.site === "static";
+const api = (p, seed) => (SITE ? `data/${p}${seed ? "-" + seed : ""}.json` : `/api/${p}${seed ? "?seed=" + seed : ""}`);
+const player = { evs: [], i: 0, t: 0, speed: 10, paused: false };
+let ws;
+function send(o) {
+  if (!SITE) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); return; }
+  if (o.cmd === "start") play(o.policy.replace("replay:", ""));
+  if (o.cmd === "speed") player.speed = o.value;
+  if (o.cmd === "pause") player.paused = o.on;
+}
+async function play(name) {
+  status("Loading recorded run…");
+  const text = await (await fetch(`data/runs/${name}`)).text();
+  Object.assign(player, { evs: text.trim().split("\n").map((l) => JSON.parse(l)), i: 0, t: 0 });
+  batch.push({ kind: "SESSION_RESET", seq: -1, t: 0, data: { replay: name.replace(".jsonl", "") } });
+}
+setInterval(() => {  // same pacing as the server's replay: sim time at speed, long gaps cut to 2 s
+  const { evs, speed } = player;
+  if (player.paused || player.i >= evs.length) return;
+  player.t = Math.max(player.t + 0.05 * speed, evs[player.i].t - 2 * speed);
+  while (player.i < evs.length && evs[player.i].t <= player.t) batch.push(evs[player.i++]);
+}, 50);
+function setLinkButtons(state) { for (const b of $("link").children) b.classList.toggle("active", b.dataset.v === state); }
+function hello(d) {
+  const pol = $("policy");
+  pol.querySelector('[value="agent"]').textContent = d.agent_available ? "AI agent" : "AI agent (no API key)";
+  if (!d.running && !S.world) pol.value = d.agent_available ? "agent" : "infogain";
+  $("speed").value = d.speed; $("speedv").textContent = d.speed + "x";
+  const has = (sel, v) => [...$(sel).options].some((o) => o.value === v);
+  if (has("scenario", d.scenario)) $("scenario").value = d.scenario;
+  if (d.running && has("policy", d.policy)) pol.value = d.policy;
+  if (d.running || S.world) $("overlay").style.display = "none";
+}
+$("start").onclick = () => send({ cmd: "start", scenario: $("scenario").value, policy: $("policy").value });
+let paused = false;
+$("pause").onclick = () => { paused = !paused; send({ cmd: "pause", on: paused }); $("pause").textContent = paused ? "Resume" : "Pause"; $("pause").classList.toggle("on", paused); };
+$("speed").oninput = (e) => { $("speedv").textContent = e.target.value + "x"; send({ cmd: "speed", value: +e.target.value }); };
+for (const b of $("link").children) b.onclick = () => send({ cmd: "link", state: b.dataset.v });
+$("degrade").onclick = () => send({ cmd: "degrade", on: !S.sensorDegraded });
+for (const c of $("logf").children) c.onclick = () => { $("log").dataset.f = c.dataset.f; for (const x of $("logf").children) x.classList.toggle("active", x === c); };
+for (const c of $("layers").children) c.onclick = () => { layer = c.dataset.l; for (const x of $("layers").children) x.classList.toggle("active", x === c); legend(); dirty = true; };
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+  if (e.key === "1" || e.key === "2" || e.key === "3") $("layers").children[+e.key - 1].click();
+  if (e.key === " ") { e.preventDefault(); $("pause").click(); }
+});
+
+let batch = [];
+setInterval(() => { if (batch.length) { const b = batch; batch = []; for (const ev of b) onEvent(ev); } }, 50);
+function connect() {
+  ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
+  ws.onopen = () => { batch = []; fresh(); $("log").innerHTML = ""; $("cond").innerHTML = ""; renderClaims(); $("parcels").innerHTML = ""; status(""); dirty = true; };
+  ws.onmessage = (m) => { batch.push(JSON.parse(m.data)); };
+  ws.onclose = () => setTimeout(connect, 1000);
+}
+if (SITE) {
+  for (const el of [$("scenario").parentElement, $("link").parentElement, $("degrade")]) el.hidden = true;
+  $("policy").innerHTML = "";
+  $("overlay").textContent = "Loading a recorded run…";
+} else fetch("/api/scenarios").then((r) => r.json()).then((list) => {
+  $("scenario").innerHTML = list.map((s) => `<option value="${s}">${words(s)}</option>`).join("");
+}).finally(connect);
+function loadRecordings() {
+  return fetch(api("recordings")).then((r) => r.json()).then((list) => {
+    $("policy").querySelector("optgroup")?.remove();
+    if (!list.length) return;
+    const g = document.createElement("optgroup"); g.label = "Replay";
+    g.innerHTML = list.map((r) => `<option value="replay:${esc(r.name)}">${esc(r.label)}</option>`).join("");
+    $("policy").appendChild(g);
+  });
+}
+loadRecordings().then(() => SITE && $("start").click());
+resize(); legend(); renderClaims(); loop();
+
+// ---------- views ----------
+const cache = {};
+const getJSON = (url) => (cache[url] ??= fetch(url).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${url}: ${r.status}`)))).catch((e) => { delete cache[url]; throw e; }));
+let view = "mission", plan = "greedy";
+function show(v) {
+  view = v;
+  for (const b of $("view").children) b.classList.toggle("active", b.dataset.v === v);
+  for (const id of ["mission", "district", "evals"]) $("v-" + id).hidden = id !== v;
+  $("mctl").hidden = v !== "mission";
+  document.querySelector("footer").hidden = v !== "mission";
+  if (v === "district") district().catch((e) => ($("dnote").textContent = `could not load: ${e.message}`));
+  if (v === "evals") evals().catch((e) => ($("v-evals").innerHTML = `<div class="banner">Could not load evals: ${esc(e.message)}</div>`));
+  if (v === "mission") resize();
+}
+for (const b of $("view").children) b.onclick = () => show(b.dataset.v);
+for (const b of $("dplan").children) b.onclick = () => { plan = b.dataset.p; for (const x of $("dplan").children) x.classList.toggle("active", x === b); district(); };
+$("dseed").innerHTML = Array.from({ length: 12 }, (_, i) => `<option value="${i + 11}">district ${i + 11}</option>`).join("");
+$("dseed").onchange = () => district();
+
+async function district() {
+  $("dnote").textContent = "flying both plans…";
+  const D = await getJSON(api("district", $("dseed").value)), P = D.plans[plan];
+  const flooded = D.villages.filter((v) => v.flooded && v.expected > 0);
+  $("dnote").textContent = `${flooded.length} flooded of ${D.villages.length} villages, ${D.hubs.length} hubs, reach ${D.reach_km} km, hubs cover ${Math.round(D.covered * 100)}% of insured value`;
+  const g = D.plans.greedy, n = D.plans.nearest, less = 1 - g.kes_hours_waiting / n.kes_hours_waiting;
+  $("dstats").innerHTML = [
+    ["Money waiting, greedy", `${g.kes_hours_waiting.toLocaleString()} KES-h`],
+    ["Money waiting, nearest hub", `${n.kes_hours_waiting.toLocaleString()} KES-h`],
+    ["Greedy leaves less waiting by", `${Math.round(less * 100)}%`],
+    ["Owed but out of reach", fmtKES(P.owed_unreached)],
+    ["Last village settled", `${P.makespan_h} h`],
+  ].map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join("");
+  $("dqueues").innerHTML = Object.entries(P.queues).map(([h, q]) => `<div class="queue"><b>${h}</b>${q.length ? q.map((v) => `${v} ${P.settled_h[v]} h`).join("  →  ") : "idle"}</div>`).join("");
+  drawDistrict(D, P);
+}
+function drawDistrict(D, P) {
+  const c = $("dmap"), wrap = $("dmapWrap"), r = window.devicePixelRatio || 1;
+  const px = Math.max(280, Math.min(wrap.clientWidth - 24, wrap.clientHeight - 16));
+  c.width = c.height = px * r; c.style.width = c.style.height = px + "px";
+  const pad = 24 * r, g = c.getContext("2d"), k = (px * r - 2 * pad) / D.span_km, at = (x, y) => [pad + x * k, pad + y * k];
+  g.fillStyle = "#111113"; g.fillRect(0, 0, c.width, c.height);
+  const hubs = Object.fromEntries(D.hubs.map((h) => [h.id, h]));
+  g.setLineDash([5 * r, 5 * r]); g.strokeStyle = `rgba(${BLUE},0.55)`; g.lineWidth = r;
+  for (const h of D.hubs) { g.beginPath(); g.arc(...at(h.x, h.y), D.reach_km * k, 0, 2 * Math.PI); g.stroke(); }
+  g.setLineDash([]);
+  const vs = Object.fromEntries(D.villages.map((v) => [v.id, v]));
+  for (const [h, q] of Object.entries(P.queues)) q.forEach((vid, i) => {
+    const a = at(hubs[h].x, hubs[h].y), b = at(vs[vid].x, vs[vid].y);
+    g.strokeStyle = "rgba(245,245,247,0.55)"; g.lineWidth = 1.2 * r; g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.stroke();
+    const [mx, my] = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    g.fillStyle = "#1c1c1e"; g.beginPath(); g.arc(mx, my, 8 * r, 0, 2 * Math.PI); g.fill();
+    g.fillStyle = INK; g.font = `600 ${10 * r}px -apple-system, sans-serif`; g.textAlign = "center"; g.fillText(i + 1, mx, my + 3.5 * r);
+  });
+  for (const v of D.villages) {
+    const [x, y] = at(v.x, v.y), live = v.flooded && v.expected > 0, rad = (4 + Math.sqrt(v.expected) / 22) * r;
+    g.beginPath(); g.arc(x, y, rad, 0, 2 * Math.PI);
+    g.fillStyle = live ? "rgba(255,159,10,0.85)" : "rgba(235,235,245,0.18)"; g.fill();
+    if (live && !(v.id in P.settled_h)) { g.strokeStyle = `rgb(${RED})`; g.lineWidth = 2 * r; g.stroke(); }
+    if (live) {
+      g.fillStyle = INK; g.font = `500 ${10 * r}px -apple-system, sans-serif`; g.textAlign = "center";
+      g.fillText(v.id, x, y + rad + 12 * r);
+    }
+  }
+  for (const h of D.hubs) {
+    const [x, y] = at(h.x, h.y);
+    g.fillStyle = INK; g.beginPath(); g.roundRect(x - 13 * r, y - 10 * r, 26 * r, 20 * r, 5 * r); g.fill();
+    g.fillStyle = "#000"; g.font = `700 ${10 * r}px -apple-system, sans-serif`; g.textAlign = "center"; g.fillText(h.id, x, y + 3.5 * r);
+  }
+}
+
+const SECTIONS = [
+  ["Outcomes", [["outcome.payout_mae_pct", "Payout error, % of sum insured", 2], ["outcome.owed_unpaid", "Owed farmers left unpaid", 2], ["outcome.paid_not_owed", "Paid but not owed", 2], ["outcome.distance_km", "Distance, km", 1], ["outcome.first_claim_min", "First claim, sim minutes", 0]]],
+  ["Farmer agent", [["farmer.severity_accuracy", "Damage read correctly", "%"], ["farmer.where_accuracy", "Part of field read correctly", "%"], ["farmer.when_accuracy", "Timing read correctly", "%"], ["farmer.attack_recall", "Attacks flagged", "%"], ["farmer.warning_recall", "Warnings recognised", "%"], ["farmer.discounted", "Reports discounted by memory", 2]]],
+  ["Adjuster agent", [["adjuster.audit_misses", "Audit misses", 2], ["adjuster.challenges", "Challenges per flood", 2], ["adjuster.ungrounded_attempts", "Ungrounded challenge attempts", 2], ["adjuster.escalations", "Handed to a person", 2]]],
+  ["Field agent", [["field.refusal_recovery", "Refused claims recovered", "%"], ["field.flight_changes", "Flight changes per flood", 2], ["field.minutes_waited", "Minutes waited for weather", 0], ["field.degraded_quality", "Camera quality under faults", 2]]],
+];
+const val = (m, f) => (m == null || m[0] == null ? "n/a" : f === "%" ? Math.round(m[0] * 100) + "%" : m[0].toFixed(f));
+const ciTxt = (m, f) => (m == null || m[0] == null || m[1] === m[2] ? "" : `<small>${val([m[1]], f)} to ${val([m[2]], f)}</small>`);
+async function evals() {
+  const E = await getJSON(api("evals"));
+  const base = E.suites.find((x) => x.name === "rules-default-test"), mem = E.suites.find((x) => x.name.endsWith("-memory"));
+  const live = E.suites.filter((x) => x.name.startsWith("live"));
+  const safety = Object.entries(base.summary).filter(([k]) => k.startsWith("safety.") && k !== "safety.pass_k");
+  const card = (title, body) => `<section class="panel"><h2>${title}</h2>${body}</section>`;
+  const rows = (sm, list) => `<div class="kv">${list.map(([k, l, f]) => `<span>${l}</span><b>${val(sm[k], f)}${ciTxt(sm[k], f)}</b>`).join("")}</div>`;
+  const dist = E.districts[0]?.summary.greedy;
+  $("v-evals").innerHTML = `<div class="banner">${live.length ? `Live model runs: ${live.map((x) => x.name).join(", ")}.` : "<b>No live model scored yet.</b> These are the rule-based fallbacks, the bar a live model has to beat."} ${base.cases} held-out cases, means with 95% bootstrap intervals.</div>`
+    + card("Safety", `<div class="big">${Math.round(base.summary["safety.pass_k"][0] * 100)}%</div><div class="queue">of cases with zero violations in every trial</div><div class="kv">${safety.map(([k, m]) => `<span>${words(k.slice(7))}</span><b>${val(m, 0)}</b>`).join("")}</div>`)
+    + SECTIONS.map(([t, list]) => card(t, rows(base.summary, list))).join("")
+    + (mem ? card("Memory across missions", rows(mem.summary, [["farmer.discounted", "Reports discounted per flood", 2], ["outcome.distance_km", "Distance with memory, km", 1], ["outcome.payout_mae_pct", "Payout error with memory, %", 2]])) : "")
+    + (dist ? card("District dispatch", `<div class="big">${Math.round(dist.less_than_nearest[0] * 100)}%</div><div class="queue">less money waiting than nearest hub first, ${Math.round(dist.less_than_nearest[1] * 100)} to ${Math.round(dist.less_than_nearest[2] * 100)}% across ${dist.districts} held-out districts</div>`) : "");
+}
+window.addEventListener("resize", () => { if (view === "district") district(); });
+</script>
+</body>
+</html>
