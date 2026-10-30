@@ -19,6 +19,7 @@
   --green: #30d158;
   --orange: #ff9f0a;
   --red: #ff453a;
+  --yellow: #ffd60a;
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
   --mono: "SF Mono", ui-monospace, Menlo, monospace;
 }
@@ -29,7 +30,7 @@ button, select, input { font: inherit; color: inherit; }
 .mono { font-variant-numeric: tabular-nums; }
 .muted { color: var(--label-2); }
 
-header { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--sep); flex-wrap: wrap; position: relative; z-index: 2; }
+header { display: flex; align-items: center; gap: 14px; padding: 10px 16px; min-height: 52px; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--sep); flex-wrap: wrap; position: relative; z-index: 2; }
 .brand { font-size: 17px; font-weight: 600; letter-spacing: -.02em; margin-right: 4px; }
 .group { display: flex; align-items: center; gap: 8px; }
 .group label { color: var(--label-2); }
@@ -39,28 +40,34 @@ select:hover, .btn:hover { background: rgba(118, 118, 128, .34); }
 #policy { max-width: 200px; }
 .btn.primary { background: var(--blue); color: #fff; font-weight: 600; }
 .btn.primary:hover { background: #409cff; }
-.btn.on { background: rgba(255, 159, 10, .2); color: var(--orange); }
+.btn.on { background: rgba(10, 132, 255, .22); color: #409cff; }
 .seg { display: inline-flex; background: var(--fill); border-radius: 9px; padding: 2px; gap: 2px; }
 .seg button { background: transparent; border: 0; border-radius: 7px; padding: 3px 11px; cursor: pointer; color: var(--label-2); font-weight: 500; }
 .seg button.active { background: #636366; color: var(--label); box-shadow: 0 2px 6px rgba(0, 0, 0, .35); }
-#link button.active[data-v="online"] { color: var(--green); }
-#link button.active[data-v="degraded"] { color: var(--orange); }
+#link button.active[data-v="degraded"] { color: var(--yellow); }
 #link button.active[data-v="offline"] { color: var(--red); }
 input[type=range] { width: 100px; accent-color: var(--blue); }
-.totals { margin-left: auto; display: flex; gap: 22px; }
-.totals span { display: flex; flex-direction: column; align-items: flex-end; color: var(--label-2); font-size: 11px; }
-.totals b { color: var(--label); font-size: 17px; font-weight: 600; letter-spacing: -.02em; }
-@media (max-width: 1600px) { .group label { display: none; } }
+.mid { flex: 1; display: flex; justify-content: center; align-items: center; gap: 14px; }
+.tools { display: flex; gap: 8px; margin-left: auto; }
+.btn.dot::after { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); margin-left: 7px; vertical-align: 1px; }
+[popover] { margin: 0; inset: auto; border: 1px solid var(--sep); border-radius: 14px; padding: 14px 16px 16px; width: 280px; color: var(--label);
+  background: rgba(44, 44, 46, .86); -webkit-backdrop-filter: saturate(180%) blur(30px); backdrop-filter: saturate(180%) blur(30px); box-shadow: 0 18px 50px rgba(0, 0, 0, .5); }
+#faults h3 { margin: 0; font-size: 15px; font-weight: 600; }
+#faults p { margin: 2px 0 12px; color: var(--label-2); }
+#faults label { display: block; margin: 10px 0 6px; color: var(--label-2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+#faults .seg { display: flex; } #faults .seg button { flex: 1; }
+#faults .btn { width: 100%; }
+@media (max-width: 1280px) { .group label { display: none; } }
 
 main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(420px, 1fr); gap: 12px; padding: 12px; min-height: 0; overflow: hidden; }
 .panel { background: var(--surface); border-radius: 14px; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .panel h2 { margin: 0; padding: 12px 14px 8px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; display: flex; align-items: center; gap: 12px; }
-.panel h2 .note { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--label-2); }
-.panel h2 .seg { font-size: 12px; }
+.panel h2 .note { margin-left: auto; font-size: 13px; font-weight: 400; color: var(--label-2); }
+.panel h2 .seg { font-size: 13px; }
 
-.cond { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 0 14px 12px; color: var(--label-2); font-size: 12px; align-items: center; }
-.cond b { color: var(--label); font-weight: 600; font-size: 13px; margin-left: 6px; }
-.cond b.warn { color: var(--orange); } .cond b.bad { color: var(--red); }
+.cond { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 0 14px 12px; color: var(--label-2); align-items: center; }
+.cond b { color: var(--label); font-weight: 600; margin-left: 6px; }
+.cond b.warn { color: var(--yellow); } .cond b.bad { color: var(--red); }
 .meter { display: inline-block; width: 56px; height: 4px; margin-left: 8px; border-radius: 2px; background: var(--fill); overflow: hidden; vertical-align: middle; }
 .meter i { display: block; height: 100%; }
 .spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; margin-left: 8px; vertical-align: middle; }
@@ -73,11 +80,15 @@ canvas#map { background: #111113; border-radius: 10px; }
 #scene3d .hud { position: absolute; z-index: 2; display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--label-2); pointer-events: none; }
 #scene3d .hud > * { pointer-events: auto; }
 #scene3d .hud.tl { left: 14px; top: 12px; flex-direction: column; align-items: flex-start; gap: 1px; text-shadow: 0 1px 3px #000; }
+#scene3d .hud.bl .col { display: flex; flex-direction: column; min-width: 0; }
 #scene3d .hud.tl b { color: var(--label); font-size: 13px; font-weight: 600; }
-#scene3d .hud.tr { right: 12px; top: 10px; }
-#scene3d .hud.bl { left: 12px; bottom: 10px; color: var(--label-3); }
+#scene3d .hud.tr { right: 12px; top: 10px; opacity: 0; transition: opacity .25s; }
+#scene3d:hover .hud.tr, #scene3d:focus-within .hud.tr { opacity: 1; }
+@media (hover: none) { #scene3d .hud.tr { opacity: 1; } }
+#scene3d .hud.bl { left: 12px; bottom: 10px; right: 290px; color: var(--label-3); }
+#scene3d .hud.bl .col span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #scene3d .hud .seg { font-size: 11px; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
-#scene3d .hud.br { right: 12px; bottom: 6px; font-size: 9.5px; color: var(--label-3); }
+
 #pip { position: absolute; right: 12px; bottom: 24px; z-index: 2; width: min(34%, 260px); aspect-ratio: 1; border-radius: 10px; border: 1px solid rgba(235, 235, 245, .35); box-shadow: 0 8px 30px rgba(0, 0, 0, .55); pointer-events: none; display: none; overflow: hidden; }
 #pip.on { display: block; }
 #pip .fx { position: absolute; inset: 0; }
@@ -95,13 +106,38 @@ canvas#map { background: #111113; border-radius: 10px; }
 .l3 span { color: var(--label-2); }
 .l3.focus { border-color: var(--blue); } .l3.focus i { background: var(--blue); }
 .l3.paid { border-color: var(--green); } .l3.paid i, .l3.paid span { background: none; color: var(--green); } .l3.paid i { background: var(--green); }
-.l3.refused { border-color: var(--orange); } .l3.refused i { background: var(--orange); }
+.l3.refused { border-color: var(--yellow); } .l3.refused i { background: var(--yellow); } .l3.refused span { color: var(--yellow); }
 .l3.zone { border-color: rgba(255, 69, 58, .6); } .l3.zone b { color: var(--red); }
 .l3.hub b { font-weight: 600; }
+.l3.pick { pointer-events: auto; cursor: pointer; }
+.l3.pick:hover { border-color: rgba(235, 235, 245, .5); }
+.l3.sel { background: var(--label); color: #000; border-color: var(--label); z-index: 99999 !important; }
+.l3.sel span { color: rgba(0, 0, 0, .6); } .l3.sel i { background: var(--blue); }
 #overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--label-2); font-size: 15px; pointer-events: none; }
-#status { margin: 0 12px; padding: 8px 12px; border-radius: 10px; background: var(--fill-2); color: var(--label); min-height: 34px; font-size: 13px; }
-#status:empty { visibility: hidden; }
-.legend { display: flex; align-items: center; gap: 6px; padding: 8px 14px 12px; color: var(--label-2); font-size: 12px; flex-wrap: wrap; }
+#v-mission { grid-template-rows: auto minmax(0, 1fr); }
+#summary { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(4, minmax(0, 1fr)); gap: 12px; }
+#summary > * { background: var(--surface); border-radius: 14px; padding: 12px 16px; min-width: 0; }
+.state { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; }
+.state span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#live { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--label-3); }
+#live.on { background: var(--blue); box-shadow: 0 0 0 4px rgba(10, 132, 255, .25); animation: breathe 2s ease-in-out infinite; }
+#live.done { background: var(--green); }
+@keyframes breathe { 50% { box-shadow: 0 0 0 7px rgba(10, 132, 255, 0); } }
+.tile small { display: block; color: var(--label-2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.tile b { display: block; font-size: 28px; font-weight: 600; letter-spacing: -.025em; line-height: 1.15; }
+.tile span { color: var(--label-2); font-size: 11px; }
+#finish { position: absolute; z-index: 5; width: min(440px, calc(100% - 48px)); padding: 26px 26px 20px; border-radius: 20px; text-align: center;
+  background: rgba(44, 44, 46, .82); -webkit-backdrop-filter: saturate(180%) blur(30px); backdrop-filter: saturate(180%) blur(30px); border: 1px solid var(--sep); box-shadow: 0 24px 60px rgba(0, 0, 0, .55); animation: rise .45s cubic-bezier(.2, .9, .3, 1.1); }
+@keyframes rise { from { opacity: 0; transform: translateY(14px) scale(.97); } }
+#finish h3 { margin: 12px 0 4px; font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+#finish p { margin: 0 0 18px; color: var(--label-2); font-size: 15px; }
+#finGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--sep); border-radius: 12px; overflow: hidden; }
+#finGrid div { background: var(--surface); padding: 10px 6px; }
+#finGrid b { display: block; font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+#finGrid small { color: var(--label-2); font-size: 11px; }
+#finish .actions { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
+#finish .actions .btn { min-width: 110px; padding: 7px 14px; }
+.legend { display: flex; align-items: center; gap: 6px; padding: 8px 14px 12px; color: var(--label-2); flex-wrap: wrap; }
 .ramp { width: 110px; height: 6px; border-radius: 3px; }
 .key { display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; }
 .sw { width: 14px; height: 0; display: inline-block; }
@@ -118,16 +154,16 @@ canvas#map { background: #111113; border-radius: 10px; }
 .ev .src { color: var(--label-2); font-weight: 500; }
 .ev.agent .src { color: var(--blue); }
 .ev.think .msg { color: var(--label-2); }
-.ev .fn { font: 500 12px var(--mono); margin-right: 6px; color: var(--label); }
+.ev .fn { font: 500 13px var(--sans); margin-right: 6px; color: var(--label); }
 .ev .why { display: block; color: var(--label-2); }
 .ev.ok .src { color: var(--green); }
-.ev.warn .src, .ev.warn b { color: var(--orange); }
+.ev.warn .src, .ev.warn b { color: var(--yellow); }
 .ev.bad .src, .ev.bad b { color: var(--red); }
 .ev b { font-weight: 600; }
 #log[data-f="field"] .ev:not([data-r="field"]), #log[data-f="farmer"] .ev:not([data-r="farmer"]),
 #log[data-f="adjuster"] .ev:not([data-r="adjuster"]), #log[data-f="system"] .ev:not([data-r="system"]) { display: none; }
 
-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+table { width: 100%; border-collapse: collapse; }
 th { position: sticky; top: 0; background: var(--surface); color: var(--label-2); font-weight: 400; text-align: left; padding: 4px 6px 6px; border-bottom: 1px solid var(--sep); }
 th:first-child, td:first-child { padding-left: 14px; }
 th:last-child, td:last-child { padding-right: 14px; }
@@ -140,22 +176,49 @@ tr.focus td { background: rgba(10, 132, 255, .12); }
 .bar .gate { position: absolute; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--label); }
 .ci i { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: rgba(255, 159, 10, .45); }
 .ci b { position: absolute; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--label); }
-.st-paid { color: var(--green); font-weight: 500; }
-.st-refused { color: var(--orange); font-weight: 500; }
-.st-surveying { color: var(--blue); font-weight: 500; }
 
+#logPanel { position: relative; }
+#sheet { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; background: var(--surface); animation: slide .3s cubic-bezier(.2, .9, .3, 1); }
+@keyframes slide { from { opacity: 0; transform: translateX(16px); } }
+.sh { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px 10px; }
+.sh > div { flex: 1; min-width: 0; }
+.sh h3 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+#shSub { color: var(--label-2); }
+#shClose { width: 28px; height: 28px; border-radius: 50%; border: 0; background: var(--fill); color: var(--label-2); cursor: pointer; font-size: 12px; }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--fill); color: var(--label-2); }
+.pill.paid { background: rgba(48, 209, 88, .18); color: var(--green); }
+.pill.refused { background: rgba(255, 214, 10, .16); color: var(--yellow); }
+.pill.surveying { background: rgba(10, 132, 255, .2); color: #409cff; }
+.pill.review { background: rgba(255, 69, 58, .18); color: var(--red); }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 4px 16px 12px; }
+.facts div { background: var(--fill-2); border-radius: 12px; padding: 10px 12px; }
+.facts small, .facts span { display: block; color: var(--label-2); font-size: 11px; }
+.facts b { display: block; font-size: 22px; font-weight: 600; letter-spacing: -.02em; }
+.reason { margin: 0 16px 12px; color: var(--label); line-height: 1.5; }
+.timeline { list-style: none; margin: 0; padding: 0 16px 14px; }
+.timeline li { position: relative; padding: 0 0 10px 18px; color: var(--label-2); }
+.timeline li::before { content: ""; position: absolute; left: 3px; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--label-3); }
+.timeline li.ok::before { background: var(--green); } .timeline li.warn::before { background: var(--yellow); } .timeline li.bad::before { background: var(--red); }
+.sub-h { margin: 4px 16px 8px; font-size: 11px; color: var(--label-2); text-transform: uppercase; letter-spacing: .04em; }
+#parcels tr, .claim { cursor: pointer; }
+#parcels tr:hover td, .claim:hover { background: rgba(118, 118, 128, .1); }
+tr.sel td { background: rgba(10, 132, 255, .22) !important; }
+.claim.sel { background: rgba(10, 132, 255, .18); }
 #claims { padding: 0 0 8px; }
-.claim { display: grid; grid-template-columns: 44px 1fr auto 86px; gap: 4px 12px; align-items: baseline; padding: 7px 14px; }
+.claim { display: grid; grid-template-columns: 44px 1fr auto 120px; gap: 4px 12px; align-items: baseline; padding: 7px 14px; }
 .steps { grid-column: 2 / 5; display: flex; flex-wrap: wrap; gap: 4px; }
 .step { font-size: 11px; padding: 1px 7px; border-radius: 6px; background: var(--fill-2); color: var(--label-2); }
-.step.ok { color: var(--green); } .step.warn { color: var(--orange); } .step.bad { color: var(--red); }
+.step.ok { color: var(--green); } .step.warn { color: var(--yellow); } .step.bad { color: var(--red); }
 .claim + .claim { border-top: 1px solid rgba(84, 84, 88, .3); }
-.claim .id { font: 500 12px var(--mono); color: var(--label-2); }
+.claim .id { font: 500 13px var(--sans); color: var(--label-2); }
 .claim .amt { font-weight: 600; }
-.claim .pkt { text-align: right; font-size: 12px; }
-.pkt.queued { color: var(--orange); }
-.pkt.sent { color: var(--green); }
-.empty { padding: 6px 14px; color: var(--label-2); }
+.claim .pkt { text-align: right; }
+.pkt.queued { color: #409cff; }
+.pkt.sent { color: var(--label-2); }
+.empty, #log:empty::before, table:has(#parcels:empty)::after { display: block; padding: 18px 16px; color: var(--label-2); max-width: 420px; }
+.empty b { display: block; color: var(--label); font-weight: 600; margin-bottom: 2px; }
+#log:empty::before { content: "Each decision the drone and agents make shows up here as the mission runs."; }
+table:has(#parcels:empty)::after { content: "Every insured field appears here, ranked by how much payout money is still uncertain."; }
 
 footer { display: flex; gap: 0; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--sep); overflow-x: auto; padding: 0 4px; }
 .stat { padding: 8px 14px; min-width: 120px; }
@@ -165,11 +228,14 @@ footer { display: flex; gap: 0; background: rgba(28, 28, 30, .72); -webkit-backd
 .stat .sub { color: var(--label-3); font-size: 11px; }
 .batt { width: 72px; height: 4px; background: var(--fill); border-radius: 2px; margin-top: 4px; overflow: hidden; }
 .batt i { display: block; height: 100%; background: var(--green); }
-.state-online { color: var(--green); }
-.state-degraded { color: var(--orange); }
+.state-online { color: var(--label); }
+.state-degraded { color: var(--yellow); }
 .state-offline { color: var(--red); }
 
 [hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 6px; }
+tr:focus-visible { outline-offset: -2px; }
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 #mctl { display: contents; }
 .views main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(420px, 1fr); gap: 12px; padding: 12px; min-height: 0; }
 #dmapWrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 4px 12px 12px; }
@@ -178,12 +244,27 @@ canvas#dmap { background: #111113; border-radius: 10px; }
 .kv span:nth-child(odd) { color: var(--label-2); }
 .kv b { font-weight: 600; text-align: right; }
 .kv small { color: var(--label-3); font-weight: 400; margin-left: 6px; }
-.queue { padding: 2px 14px 10px; color: var(--label-2); }
-.queue b { color: var(--label); font-weight: 600; margin-right: 6px; }
-#v-evals { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); align-content: start; overflow-y: auto; }
+.queue { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 4px 16px 10px; color: var(--label-2); }
+.queue b { display: inline-grid; place-items: center; min-width: 30px; height: 22px; border-radius: 6px; background: var(--label); color: #000; font-weight: 700; font-size: 11px; margin-right: 4px; }
+.queue span { padding: 2px 8px; border-radius: 6px; background: var(--fill-2); color: var(--label); }
+.queue span small { color: var(--label-2); margin-left: 4px; }
+.facts.two { grid-template-columns: repeat(2, 1fr); }
+.cmp { display: grid; grid-template-columns: 130px 1fr auto; align-items: center; gap: 4px 10px; padding: 0 16px 6px; }
+.cmp i { height: 8px; border-radius: 4px; background: var(--label-2); }
+.cmp i.best { background: var(--blue); }
+.dotk { display: inline-grid; place-items: center; width: 10px; height: 10px; border-radius: 50%; }
+.dotk.num1 { width: 16px; height: 16px; background: #1c1c1e; border: 1px solid var(--sep); font: 600 10px var(--sans); font-style: normal; color: var(--label); }
+#v-district { grid-template-columns: minmax(0, 1.5fr) minmax(360px, 1fr); }
+#v-evals { grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; overflow-y: auto; }
+#v-evals .hero { padding: 16px 18px; }
+#v-evals .hero small { color: var(--label-2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+#v-evals .hero b { display: block; font-size: 40px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; margin: 4px 0; }
+#v-evals .hero span { color: var(--label-2); }
+.kv small { font-size: 11px; }
+@media (max-width: 1100px) { #v-evals { grid-template-columns: 1fr; } }
 .banner { grid-column: 1 / -1; padding: 10px 14px; border-radius: 12px; background: var(--fill-2); color: var(--label-2); }
-.banner b { color: var(--orange); font-weight: 600; }
-.big { font-size: 28px; font-weight: 600; letter-spacing: -.02em; padding: 0 14px; color: var(--green); }
+.banner b { color: var(--label); font-weight: 600; }
+.big { font-size: 28px; font-weight: 600; letter-spacing: -.02em; padding: 0 14px; }
 @media (max-width: 1100px) {
   body { height: auto; overflow: auto; }
   main { grid-template-columns: 1fr; }
@@ -195,123 +276,141 @@ canvas#dmap { background: #111113; border-radius: 10px; }
 <body>
 <header>
   <div class="brand">Kipimo</div>
-  <div class="seg" id="view"><button class="active" data-v="mission">Mission</button><button data-v="district">District</button><button data-v="evals">Evals</button></div>
+  <nav class="seg" id="view" aria-label="Screens"><button class="active" data-v="mission">Mission</button><button data-v="district">District</button><button data-v="evals">Evals</button></nav>
   <div id="mctl">
-  <div class="group">
-    <label for="scenario">Scenario</label>
-    <select id="scenario"></select>
-  </div>
-  <div class="group">
-    <label for="policy">Pilot</label>
-    <select id="policy">
-      <option value="agents">AI agents: field, farmer, adjuster</option>
-      <option value="agent">AI agent</option>
-      <option value="infogain">Planner</option>
-      <option value="lawnmower">Lawnmower</option>
-    </select>
-    <button class="btn primary" id="start">Start</button>
-    <button class="btn" id="pause">Pause</button>
-  </div>
-  <div class="group">
-    <label>Speed</label>
-    <input type="range" id="speed" min="1" max="20" step="1" value="10">
-    <span id="speedv" class="muted" style="width: 28px">10x</span>
-  </div>
-  <div class="group">
-    <label>Link</label>
-    <div class="seg" id="link">
-      <button data-v="online" class="active">Online</button>
-      <button data-v="degraded">Degraded</button>
-      <button data-v="offline">Offline</button>
+  <div class="mid">
+    <div class="group"><label for="scenario">Scenario</label><select id="scenario"></select></div>
+    <div class="group">
+      <label for="policy">Pilot</label>
+      <select id="policy">
+        <option value="agents">AI agents: field, farmer, adjuster</option>
+        <option value="agent">AI agent</option>
+        <option value="infogain">Planner</option>
+        <option value="lawnmower">Lawnmower</option>
+      </select>
+    </div>
+    <div class="group">
+      <button class="btn primary" id="start">Start</button>
+      <button class="btn" id="pause">Pause</button>
+      <input type="range" id="speed" min="1" max="20" step="1" value="10" aria-label="Simulation speed">
+      <span id="speedv" class="muted" style="width: 28px">10×</span>
     </div>
   </div>
-  <button class="btn" id="degrade">Degrade camera</button>
-  <div class="totals">
-    <span>Claims<b id="hPaid">0</b></span>
-    <span>Paid<b id="hAmount">KES 0</b></span>
-    <span>Flown<b id="hDist">0.0 km</b></span>
+  <div class="tools">
+    <button class="btn" id="faultsBtn" popovertarget="faults">Faults</button>
+    <button class="btn" id="diagBtn" aria-pressed="false">Diagnostics</button>
+  </div>
+  <div id="faults" popover>
+    <h3>Inject a fault</h3>
+    <p>See how the mission copes.</p>
+    <label>Radio link</label>
+    <div class="seg" id="link" role="group" aria-label="Radio link">
+      <button data-v="online" class="active">Online</button>
+      <button data-v="degraded">Weak</button>
+      <button data-v="offline">Offline</button>
+    </div>
+    <label>Camera</label>
+    <button class="btn" id="degrade">Blur the camera</button>
   </div>
   </div>
 </header>
 
-<div class="views" style="display: contents">
+<div class="views" style="display: contents" role="main">
 <main id="v-mission">
+  <section id="summary" aria-live="polite">
+    <div class="state"><i id="live"></i><span id="status">Ready</span></div>
+    <div class="tile"><small>Farmers paid</small><b id="hPaid">0</b><span id="hPaidSub"></span></div>
+    <div class="tile"><small>Paid out</small><b id="hAmount">KES 0</b><span id="hSent"></span></div>
+    <div class="tile"><small>First payout</small><b id="hFirst">-</b><span>after launch, simulated</span></div>
+    <div class="tile"><small>Flown</small><b id="hDist">0.0 km</b><span id="hBatt"></span></div>
+  </section>
   <section class="panel">
     <h2>Map
-      <span class="seg" id="layers">
-        <button class="active" data-l="belief">Loss estimate</button>
-        <button data-l="voi">Survey value</button>
-        <button data-l="truth">True loss</button>
+      <span class="seg" id="layers" role="group" aria-label="Map layer">
+        <button class="active" data-l="belief">Crop loss</button>
+        <button data-l="voi">Where to look</button>
+        <button data-l="truth">Ground truth</button>
       </span>
-      <span class="seg" id="viewMode"><button class="active" data-v="top">Top</button><button data-v="3d">3D</button></span>
+      <span class="seg" id="viewMode" role="group" aria-label="Map view"><button class="active" data-v="top">Top</button><button data-v="3d">3D</button></span>
       <span class="note" id="mapNote"></span>
     </h2>
     <div class="cond" id="cond"></div>
     <div id="mapWrap">
-      <canvas id="map"></canvas>
+      <canvas id="map" role="img" aria-label="Map of the fields, the drone's path and crop loss. Click a field for details."></canvas>
       <div id="scene3d">
         <div id="labels3d"></div>
-        <div class="hud tl"><b id="s3site"></b><span><span id="s3ex">heights x3</span>, drone drawn 40x</span></div>
+        <div class="hud tl"><b id="s3site"></b><span><span id="s3ex">Heights ×3</span>, drone enlarged</span></div>
         <div class="hud tr">
-          <span class="seg" id="camMode"><button class="active" data-c="orbit">Orbit</button><button data-c="follow">Follow</button><button data-c="top">Top</button></span>
-          <span class="seg" id="groundMode"><button class="active" data-g="1,0">Satellite</button><button data-g="0,0">Farm</button><button data-g="-1,0.85">Data</button></span>
-          <span class="seg" id="exag"><button data-e="1">x1</button><button class="active" data-e="3">x3</button><button data-e="6">x6</button></span>
+          <span class="seg" id="camMode" role="group" aria-label="Camera"><button class="active" data-c="orbit">Orbit</button><button data-c="follow">Follow</button><button data-c="top">Top</button></span>
+          <span class="seg" id="groundMode" role="group" aria-label="Ground"><button class="active" data-g="1,0">Satellite</button><button data-g="0,0">Illustrated</button><button data-g="-1,0.85">Loss map</button></span>
+          <span class="seg" id="exag" role="group" aria-label="Height exaggeration"><button data-e="1">1×</button><button class="active" data-e="3">3×</button><button data-e="6">6×</button></span>
         </div>
         <div id="pip"><div class="fx"></div><i class="cross"></i><span class="rec">Drone camera</span><span class="meta" id="pipMeta"></span></div>
-        <div class="hud br" id="credit">Imagery: Sentinel-2 cloudless 2016 by EOX, contains modified Copernicus Sentinel data, CC BY 4.0</div>
-        <div class="hud bl"><i id="compass">N</i><span>drag to orbit, right drag to pan, scroll to zoom</span></div>
+        <div class="hud bl"><i id="compass">N</i><span class="col"><span id="hint">Drag to turn, right-drag to move, scroll to zoom</span><span id="credit">Imagery: Sentinel-2 cloudless 2016 by EOX, contains modified Copernicus Sentinel data, CC BY 4.0</span></span></div>
       </div>
-      <div id="overlay">No mission running. Pick a scenario and pilot, then Start.</div>
+      <div id="finish" hidden role="dialog" aria-labelledby="finTitle">
+        <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="22" fill="#30d158"/><path d="M13 22.5l6 6 12-13" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 id="finTitle">Mission complete</h3>
+        <p id="finLede"></p>
+        <div id="finGrid"></div>
+        <div class="actions"><button class="btn" id="finClose">Close</button><button class="btn primary" id="finAgain">Run again</button></div>
+      </div>
+      <div id="overlay">Choose a scenario and pilot, then press Start.</div>
     </div>
-    <div id="status"></div>
     <div class="legend" id="legend"></div>
   </section>
 
   <section id="right">
-    <div class="panel">
+    <div class="panel" id="logPanel">
+      <aside id="sheet" hidden aria-label="Parcel details">
+        <div class="sh"><div><h3 id="shTitle"></h3><span id="shSub"></span></div><span id="shPill"></span><button id="shClose" aria-label="Close details">✕</button></div>
+        <div class="scroll" id="shBody"></div>
+      </aside>
       <h2>Log
-        <span class="seg" id="logf">
+        <span class="seg" id="logf" role="group" aria-label="Filter the log">
           <button class="active" data-f="all">All</button><button data-f="field">Field</button><button data-f="farmer">Farmer</button><button data-f="adjuster">Adjuster</button><button data-f="system">System</button>
         </span>
       </h2>
       <div class="scroll" id="traceScroll"><div id="log"></div></div>
     </div>
     <div class="panel">
-      <h2>Parcels <span class="note">by money at risk, gate <span id="gateV">0.80</span></span></h2>
+      <h2>Parcels <span class="note">most money in doubt first, pays at <span id="gateV">80%</span> confidence</span></h2>
       <div class="scroll">
         <table>
-          <thead><tr><th>Parcel</th><th>Farmer</th><th>Loss, 95% CI</th><th>Confidence</th><th class="num">At risk</th><th class="num">Payout</th><th></th></tr></thead>
+          <thead><tr><th>Parcel</th><th>Farmer</th><th>Crop loss</th><th>Confidence</th><th class="num">In doubt</th><th class="num">Payout</th><th>Status</th></tr></thead>
           <tbody id="parcels"></tbody>
         </table>
       </div>
     </div>
     <div class="panel">
       <h2>Claims <span class="note" id="claimNote"></span></h2>
-      <div class="scroll" id="claims"></div>
+      <div class="scroll" id="claims" role="list"></div>
     </div>
   </section>
 </main>
 
 <main id="v-district" hidden>
   <section class="panel">
-    <h2>District <select id="dseed"></select><span class="note" id="dnote"></span></h2>
-    <div id="dmapWrap"><canvas id="dmap"></canvas></div>
+    <h2>District <select id="dseed" aria-label="District"></select><span class="note" id="dnote"></span></h2>
+    <div id="dmapWrap"><canvas id="dmap" role="img" aria-label="District map of villages, drone hubs and their routes"></canvas></div>
     <div class="legend">
-      <span class="key"><i class="sw" style="border-top: 6px solid var(--orange); width: 10px"></i>flooded village, size is money expected</span>
+      <span class="key"><i class="dotk" style="background: var(--orange)"></i>flooded village, bigger owes more</span>
+      <span class="key"><i class="dotk" style="background: rgba(235, 235, 245, .18)"></i>dry village</span>
+      <span class="key"><i class="dotk" style="background: var(--orange); box-shadow: 0 0 0 2px var(--red)"></i>out of reach</span>
       <span class="key"><i class="sw" style="border-top: 1px dashed var(--blue)"></i>one battery's reach</span>
-      <span class="key"><i class="sw" style="border-top: 2px solid var(--red)"></i>out of reach</span>
+      <span class="key"><i class="dotk num1">1</i>visit order</span>
     </div>
   </section>
   <section class="panel">
-    <h2>Dispatch <span class="seg" id="dplan"><button class="active" data-p="greedy">Greedy</button><button data-p="nearest">Nearest hub</button></span></h2>
-    <div class="scroll"><div class="kv" id="dstats"></div><div id="dqueues"></div></div>
+    <h2>Dispatch <span class="seg" id="dplan" role="group" aria-label="Dispatch plan"><button class="active" data-p="greedy">Most money first</button><button data-p="nearest">Nearest first</button></span></h2>
+    <div class="scroll"><div class="facts two" id="dstats"></div><div class="sub-h">Money left waiting, KES × hours</div><div id="dcompare"></div><div class="sub-h">Each hub's route</div><div id="dqueues"></div></div>
   </section>
 </main>
 
 <main id="v-evals" hidden></main>
 </div>
 
-<footer>
+<footer id="diag" hidden>
   <div class="stat"><small>Battery</small><strong id="fBatt">-</strong><div class="batt"><i id="fBattBar" style="width: 100%"></i></div></div>
   <div class="stat"><small>Distance</small><strong id="fDist">0.00 km</strong><div class="sub" id="fSortie"></div></div>
   <div class="stat"><small>Camera</small><strong id="fSensor">-</strong><div class="sub" id="fQual"></div></div>
@@ -332,6 +431,10 @@ const words = (s) => String(s).replace(/_/g, " ");
 const b64u8 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 const clock = (t) => { t = Math.max(0, Math.round(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
 const PILOT = { agents: "3 agents", agent: "agent", infogain: "planner", lawnmower: "lawnmower" };
+const STATUS = { paid: "Paid", refused: "Look again", surveying: "Surveying", review: "With a person", "": "Waiting" };
+const REASON = { objective_met: "every parcel is confident enough", diminishing_returns: "more flying would not change a payout", distance_budget: "flight distance used up",
+  battery_reserve: "battery at its reserve", replan_limit: "too many replans", insufficient_confidence: "not confident enough", no_trigger: "loss below the first tier", already_issued: "already paid" };
+const reason = (r) => REASON[r] || words(r);
 const who = (d) => d.role && d.role !== "field" ? d.role : "agent";
 
 // ---------- state ----------
@@ -343,11 +446,11 @@ function fresh() {
     lanes: [], focus: new Set(), claims: new Map(), refused: new Map(), cases: new Map(), paidTotal: 0,
     uplink: { state: "online", depth: 0, bytes: 0, settled: 0, pkt: 0 },
     perception: null, sensorDegraded: false, events: 0, head: "", t: 0, policy: "", gate: 0.8,
-    sortieStart: 0, done: false,
+    sortieStart: 0, done: false, first: null,
   };
 }
 fresh();
-let layer = "belief";
+let layer = "belief", sel = null;
 let dirty = true;
 let pmapCanvas = null;
 
@@ -391,22 +494,40 @@ function resize() {
 }
 window.addEventListener("resize", resize);
 
-function buildParcelLines() {
-  const n = S.world.map_px, pm = S.pmap;
-  const c = document.createElement("canvas"); c.width = size * dpr; c.height = size * dpr;
-  const g = c.getContext("2d"), k = (size * dpr) / n;
-  g.strokeStyle = "rgba(255,255,255,0.2)"; g.lineWidth = Math.max(1, dpr);
-  g.beginPath();
-  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
-    const v = pm[y * n + x];
-    if (x + 1 < n && pm[y * n + x + 1] !== v) { g.moveTo((x + 1) * k, y * k); g.lineTo((x + 1) * k, (y + 1) * k); }
-    if (y + 1 < n && pm[(y + 1) * n + x] !== v) { g.moveTo(x * k, (y + 1) * k); g.lineTo((x + 1) * k, (y + 1) * k); }
+let edgeCache = { pm: null, data: null };
+function fieldEdges() {
+  if (edgeCache.pm === S.pmap) return edgeCache.data;
+  // each parcel's mask, blurred and upsampled, so borders follow the field, not the 4 m cells.
+  // R: bund line, G: unplanted headland, B: inside a field
+  const W = S.world, n = W.map_px, R = 1024, pm = S.pmap, cnv = (w) => Object.assign(document.createElement("canvas"), { width: w, height: w });
+  const m = cnv(n), mg = m.getContext("2d"), img = mg.createImageData(n, n), up = cnv(R), ug = up.getContext("2d", { willReadFrequently: true }), out = new Uint8Array(R * R * 4);
+  ug.filter = "blur(4px)";
+  for (const id of new Set(pm)) {
+    if (id === 255) continue;
+    for (let i = 0; i < n * n; i++) img.data[i * 4 + 3] = pm[i] === id ? 255 : 0;
+    mg.putImageData(img, 0, 0); ug.clearRect(0, 0, R, R); ug.drawImage(m, 0, 0, R, R);
+    const a = ug.getImageData(0, 0, R, R).data;
+    for (let j = 3; j < a.length; j += 4) {
+      const d = Math.abs(a[j] - 128);
+      out[j - 3] = Math.max(out[j - 3], 255 - d * 9);
+      out[j - 2] = Math.max(out[j - 2], a[j] > 20 ? 255 - Math.max(0, a[j] - 128) * 2.2 : 0);
+      out[j - 1] = Math.max(out[j - 1], a[j]);
+    }
   }
-  g.stroke();
+  return (edgeCache = { pm: S.pmap, data: out }).data;
+}
+function buildParcelLines() {
+  // borders from the blurred parcel masks, so they follow the field instead of the 4 m cells
+  const e = fieldEdges(), R = 1024, src = document.createElement("canvas"); src.width = src.height = R;
+  const sg = src.getContext("2d"), img = sg.createImageData(R, R);
+  for (let j = 0; j < R * R; j++) { img.data.fill(255, j * 4, j * 4 + 3); img.data[j * 4 + 3] = e[j * 4] * 0.42; }
+  sg.putImageData(img, 0, 0);
+  const c = document.createElement("canvas"); c.width = c.height = size * dpr;
+  const g = c.getContext("2d"); g.imageSmoothingQuality = "high"; g.drawImage(src, 0, 0, c.width, c.height);
   pmapCanvas = c;
 }
 
-const INK = "#f5f5f7", PAPER = "#1c1c1e", BLUE = "10,132,255", GREEN = "#30d158", OCHRE = "#ff9f0a", RED = "255,69,58";
+const INK = "#f5f5f7", PAPER = "#1c1c1e", BLUE = "10,132,255", GREEN = "#30d158", YELLOW = "#ffd60a", RED = "255,69,58";
 function draw() {
   dirty = false;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -438,7 +559,7 @@ function draw() {
     ctx.strokeStyle = `rgba(${RED},0.45)`; ctx.lineWidth = dpr;
     for (let d = -z.r * 2; d < z.r * 2; d += 8) { ctx.beginPath(); ctx.moveTo((z.x + d - z.r) * px, (z.y + z.r) * px); ctx.lineTo((z.x + d + z.r) * px, (z.y - z.r) * px); ctx.stroke(); }
     ctx.restore();
-    label("no fly: " + words(z.name || ""), z.x * px, (z.y + z.r) * px + 13 * dpr, `rgb(${RED})`, 11);
+    label("No fly: " + words(z.name || ""), z.x * px, (z.y + z.r) * px + 15 * dpr, INK, 11, true);
   }
 
   // planned lanes and the active swath
@@ -461,10 +582,16 @@ function draw() {
   for (const p of W.parcels) {
     const x = p.cx * px, y = p.cy * px;
     const claimed = S.claims.has(p.id), refused = S.refused.has(p.id) && !claimed, focus = S.focus.has(p.id);
+    if (p.id === sel) {
+      ctx.beginPath(); ctx.arc(x, y, 17 * dpr, 0, 2 * Math.PI); ctx.fillStyle = `rgba(${BLUE},0.3)`; ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, 13 * dpr, 0, 2 * Math.PI); ctx.fillStyle = INK; ctx.fill();
+      label(p.id, x, y + 4 * dpr, PAPER, 10, true, true);
+      continue;
+    }
     ctx.beginPath(); ctx.arc(x, y, 12 * dpr, 0, 2 * Math.PI);
     ctx.fillStyle = "rgba(28,28,30,0.82)"; ctx.fill();
     ctx.lineWidth = (claimed || refused || focus ? 2 : 1) * dpr;
-    ctx.strokeStyle = claimed ? GREEN : refused ? OCHRE : focus ? `rgb(${BLUE})` : "rgba(235,235,245,0.3)";
+    ctx.strokeStyle = claimed ? GREEN : refused ? YELLOW : focus ? `rgb(${BLUE})` : "rgba(235,235,245,0.3)";
     ctx.stroke();
     label(p.id, x, y + 4 * dpr, INK, 10, true);
   }
@@ -477,8 +604,8 @@ function draw() {
   // drone and camera footprint
   if (S.pose) {
     const { x, y, yaw } = S.pose, h = S.alt * W.fov_tan;
-    ctx.strokeStyle = S.sensorDegraded ? OCHRE : INK;
-    ctx.fillStyle = S.sensorDegraded ? "rgba(255,159,10,0.14)" : "rgba(255,255,255,0.08)";
+    ctx.strokeStyle = S.sensorDegraded ? YELLOW : INK;
+    ctx.fillStyle = S.sensorDegraded ? "rgba(255,214,10,0.14)" : "rgba(255,255,255,0.08)";
     ctx.lineWidth = dpr;
     ctx.fillRect((x - h) * px, (y - h) * px, 2 * h * px, 2 * h * px);
     ctx.strokeRect((x - h) * px, (y - h) * px, 2 * h * px, 2 * h * px);
@@ -491,7 +618,7 @@ function draw() {
 }
 function windBadge() {
   if (!S.wind) return;
-  const [wx, wy] = S.wind, v = Math.hypot(wx, wy), r = 16 * dpr, cx = cv.width - r - 12 * dpr, cy = r + 12 * dpr;
+  const [wx, wy] = S.wind, v = Math.hypot(wx, wy), r = 16 * dpr, cx = cv.width - r - 14 * dpr, cy = cv.height - r - 30 * dpr;
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fillStyle = "rgba(28,28,30,0.82)"; ctx.fill();
   ctx.strokeStyle = "rgba(235,235,245,0.3)"; ctx.lineWidth = dpr; ctx.stroke();
   if (v > 0.1) {
@@ -499,29 +626,76 @@ function windBadge() {
     ctx.beginPath(); ctx.moveTo(-r * 0.6, 0); ctx.lineTo(r * 0.55, 0); ctx.moveTo(r * 0.25, -r * 0.3); ctx.lineTo(r * 0.6, 0); ctx.lineTo(r * 0.25, r * 0.3);
     ctx.strokeStyle = INK; ctx.lineWidth = 1.6 * dpr; ctx.lineCap = "round"; ctx.stroke(); ctx.restore();
   }
-  label(`wind ${v.toFixed(1)} m/s`, cx, cy + r + 14 * dpr, INK, 10);
+  label(`Wind ${v.toFixed(1)} m/s`, cx, cy + r + 14 * dpr, INK, 10);
 }
-function label(text, x, y, color, sz, bold) {
+function label(text, x, y, color, sz, bold, flat) {
   ctx.font = `${bold ? 600 : 400} ${sz * dpr}px -apple-system, "Segoe UI", sans-serif`;
   ctx.textAlign = "center";
-  ctx.lineWidth = 3 * dpr; ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.lineJoin = "round"; ctx.strokeText(text, x, y);
+  if (!flat) { ctx.lineWidth = 3 * dpr; ctx.strokeStyle = "rgba(0,0,0,0.6)"; ctx.lineJoin = "round"; ctx.strokeText(text, x, y); }
   ctx.fillStyle = color; ctx.fillText(text, x, y);
 }
 function loop() { if (dirty) draw(); requestAnimationFrame(loop); }
 
 function legend() {
   const grad = (fn) => { const c = []; for (let i = 0; i <= 10; i++) { const [r, g, b] = fn(i / 10); c.push(`rgb(${r | 0},${g | 0},${b | 0}) ${i * 10}%`); } return `linear-gradient(90deg, ${c.join(",")})`; };
-  const keys = `<span class="key"><i class="sw" style="border-top: 2px solid ${INK}"></i>flown</span>
+  const keys = `<span class="key"><i class="sw" style="border-top: 2px solid ${INK}"></i>flight path</span>
     <span class="key"><i class="sw" style="border-top: 1px dashed rgb(${BLUE})"></i>planned</span>
     <span class="key"><i class="sw" style="border-top: 2px solid ${GREEN}"></i>paid</span>
-    <span class="key"><i class="sw" style="border-top: 2px solid ${OCHRE}"></i>refused</span>`;
+    <span class="key"><i class="sw" style="border-top: 2px solid ${YELLOW}"></i>look again</span>`;
   if (layer === "voi") {
-    $("legend").innerHTML = `Money at stake: low <span class="ramp" style="background:${grad(voiColor)}"></span> high ${keys}`;
-    $("mapNote").textContent = "payout money an observation could change";
+    $("legend").innerHTML = `Payout money a photo could change: low <span class="ramp" style="background:${grad(voiColor)}"></span> high ${keys}`;
+    $("mapNote").textContent = "Bright where the drone should look next";
   } else {
     $("legend").innerHTML = `Crop loss: 0% <span class="ramp" style="background:${grad(lossColor)}"></span> 100% ${keys}`;
-    $("mapNote").textContent = layer === "truth" ? "simulator only, the drone never sees this" : "dim where not yet surveyed";
+    $("mapNote").textContent = layer === "truth" ? "Simulator only. The drone never sees this" : "Faded where the drone hasn't looked yet";
   }
+}
+
+// ---------- selection: one parcel, highlighted on the map, the table and in 3D ----------
+function select(id) {
+  sel = id && id !== sel ? id : null;
+  renderParcels(); renderClaims(); dirty = true;
+  window.view3d?.select(sel);
+  if (sel) document.querySelector(`#parcels tr[data-id="${sel}"]`)?.scrollIntoView({ block: "nearest", behavior: calm ? "auto" : "smooth" });
+}
+function parcelAtPx(e) {
+  if (!S.world || !S.pmap) return null;
+  const r = cv.getBoundingClientRect(), n = S.world.map_px;
+  const j = Math.floor(((e.clientX - r.left) / r.width) * n), i = Math.floor(((e.clientY - r.top) / r.height) * n);
+  const k = i >= 0 && j >= 0 && i < n && j < n ? S.pmap[i * n + j] : 255;
+  return k === 255 ? null : S.world.parcels[k];
+}
+cv.addEventListener("click", (e) => { const p = parcelAtPx(e); select(p ? p.id : null); });
+cv.addEventListener("mousemove", (e) => { const p = parcelAtPx(e); cv.style.cursor = p ? "pointer" : ""; cv.title = p ? `${p.id}, ${p.holder}` : ""; });
+for (const id of ["parcels", "claims"]) {
+  $(id).addEventListener("click", (e) => { const r = e.target.closest("[data-id]"); if (r) select(r.dataset.id); });
+  $(id).addEventListener("keydown", (e) => { const r = e.target.closest("[data-id]"); if (r && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.stopPropagation(); select(r.dataset.id); } });
+}
+$("shClose").onclick = () => select(null);
+function renderSheet() {
+  const sh = $("sheet"), W = S.world, q = sel && W && W.parcels.find((p) => p.id === sel);
+  sh.hidden = !q;
+  if (!q) return;
+  const row = S.frame?.situation.parcels.find((p) => p.id === sel), c = S.claims.get(sel), k = S.cases.get(sel);
+  const st = c ? "paid" : k && k.steps.at(-1).tone === "bad" ? "review" : S.refused.has(sel) ? "refused" : S.focus.has(sel) ? "surveying" : "";
+  const pct = (v) => Math.round(v * 100) + "%", gate = pct(S.gate);
+  $("shTitle").textContent = `${q.id} · ${q.holder}`;
+  $("shSub").textContent = `${q.crop}, planted ${q.age_days} days before the flood, insured for ${fmtKES(q.sum_insured)}`;
+  $("shPill").className = "pill " + st;
+  $("shPill").textContent = STATUS[st];
+  if (!row) { $("shBody").innerHTML = '<p class="reason">Details appear once the drone starts its survey.</p>'; return; }
+  const why = c ? `Paid at the ${pct(c.tier)} tier. The drone measured ${pct(row.loss)} crop loss and was ${pct(c.confidence)} sure, above the ${gate} bar.`
+    : S.refused.has(sel) ? `Held back at ${pct(S.refused.get(sel))} confidence, below the ${gate} bar. The drone goes back for a closer look.`
+    : row.confidence >= S.gate ? (row.payout_at_estimate ? `Confident enough at ${pct(row.confidence)}. A claim for ${fmtKES(row.payout_at_estimate)} will be signed.` : `Confident at ${pct(row.confidence)} that the loss is below the first payout tier. Nothing is owed.`)
+    : `The drone has seen ${pct(row.coverage)} of this field. A payout needs ${gate} confidence; it is at ${pct(row.confidence)}.`;
+  const steps = k ? k.steps.map((x) => `<li class="${x.tone}">${esc(x.text)}</li>`).join("") : "";
+  $("shBody").innerHTML = `<div class="facts">
+      <div><small>Crop loss</small><b>${pct(row.loss)}</b><span>likely ${pct(row.ci95[0])} to ${pct(row.ci95[1])}</span></div>
+      <div><small>Confidence</small><b>${pct(row.confidence)}</b><span>pays at ${gate}</span></div>
+      <div><small>${c ? "Paid" : "Payout"}</small><b>${c ? fmtKES(c.amount) : row.payout_at_estimate ? fmtKES(row.payout_at_estimate) : "None"}</b><span>${c ? (c.status === "sent" ? "delivered by SMS" : "queued to send") : "if the estimate holds"}</span></div>
+    </div>
+    <p class="reason">${why}</p>
+    ${steps ? `<div class="sub-h">Claim</div><ul class="timeline">${steps}${c ? `<li class="${c.status === "sent" ? "ok" : ""}">${c.claim_id}, ${c.bytes ? c.bytes + " bytes, " : ""}${c.status === "sent" ? "delivered" : "waiting for signal"}</li>` : ""}</ul>` : ""}`;
 }
 
 // ---------- log ----------
@@ -542,7 +716,7 @@ function toolSummary(name, inp) {
   if (name === "score_payout" || name === "get_priors") return `<span class="fn">${name}</span>${inp.parcel_id}`;
   return `<span class="fn">${esc(name)}</span>`;
 }
-function status(text) { $("status").textContent = text; }
+function status(text) { $("status").textContent = text || "Ready"; }
 
 // ---------- events ----------
 function onEvent(ev) {
@@ -552,18 +726,19 @@ function onEvent(ev) {
   switch (ev.kind) {
     case "HELLO": hello(d); return;
     case "SESSION_RESET":
-      fresh(); $("log").innerHTML = ""; renderClaims(); S.policy = d.policy; $("overlay").style.display = "none";
+      fresh(); $("finish").hidden = true; $("log").innerHTML = ""; renderClaims(); S.policy = d.policy; $("overlay").style.display = "none";
       if (d.replay) log("", "replay", `${esc(words(d.replay))}, recorded run`);
       break;
     case "EPISODE_START": S.policy = d.policy; break;
     case "WORLD_INFO":
+      if (sel && !d.parcels.some((p) => p.id === sel)) select(null);
       S.world = d; S.pmap = b64u8(d.parcel_map); pmapCanvas = null;
       S.layers.truth = gridCanvas(b64u8(d.truth), d.grid, lossColor);
       window.view3d?.world(d);
       S.layers.relief = d.relief ? gridCanvas(b64u8(d.relief), d.relief_grid, (v) => { const g = Math.max(0, Math.min(255, 128 + (v - 0.71) * 600)); return [g, g, g]; }) : null;
       S.sensor = d.sensor;
       status(S.policy === "agent" ? "Agent reading the parcel table" : "Ranking parcels by money at risk");
-      if (d.site && d.site !== "synthetic") log("", "terrain", `${esc(d.site)}, Copernicus 30 m relief`);
+      if (d.site && d.site !== "synthetic") log("", "terrain", `${esc(d.site)}, Copernicus 30 m elevation`);
       log("", "mission", `${d.parcels.length} parcels, pilot ${PILOT[S.policy] || S.policy}, camera ${d.sensor}`);
       break;
     case "FRAME": frame(d); break;
@@ -574,12 +749,12 @@ function onEvent(ev) {
       break;
     case "PLAN_BATCH": {
       S.lanes = (d.path || []).map(([a, b]) => ({ a, b })); S.focus = new Set(d.parcels);
-      if (S.policy !== "agent") log("", "planner", `${d.lanes} lanes over ${d.parcels.join(", ")}`);
+      if (S.policy !== "agent") log("", "planner", `Planned ${d.lanes} passes over ${d.parcels.length} parcels`);
       status(`Surveying ${d.parcels.length > 6 ? d.parcels.length + " parcels" : d.parcels.join(", ")}`);
       break;
     }
     case "PLAN_LANE": S.activeLane = { a: d.a, b: d.b }; break;
-    case "SURVEY_END": if (S.policy !== "agent") log("", "planner", `pass ended, ${words(d.reason)}`); break;
+    case "SURVEY_END": if (S.policy !== "agent") log("", "planner", `Pass finished: ${reason(d.reason)}`); break;
     case "AGENT_START": log("agent", "agent", `${esc(d.model)}, limit ${d.max_tool_calls} tool calls`); break;
     case "AGENT_THINKING": log("agent think", who(d), esc(d.text.length > 420 ? d.text.slice(0, 420) + "…" : d.text)); break;
     case "AGENT_TEXT": log("agent", who(d), esc(d.text)); status(d.text.length > 140 ? d.text.slice(0, 140) + "…" : d.text); break;
@@ -604,16 +779,16 @@ function onEvent(ev) {
       const sc = d.score || {};
       if (d.reason === "insufficient_confidence") {
         S.refused.set(d.parcel, sc.confidence);
-        step(d.parcel, `refused at gate ${(+sc.confidence).toFixed(2)}`, "warn");
-        log("warn", "payout", `<b>refused</b> ${d.parcel}: confidence ${(+sc.confidence).toFixed(2)}, gate ${(+sc.min_confidence).toFixed(2)}`);
-        status(`${d.parcel} refused on confidence, surveying again`);
-      } else log("", "payout", `${d.parcel} not issued, ${words(d.reason)}`);
+        step(d.parcel, `held back at ${Math.round(sc.confidence * 100)}% confidence`, "warn");
+        log("warn", "payout", `<b>Held back</b> ${d.parcel}: ${Math.round(sc.confidence * 100)}% sure, needs ${Math.round(sc.min_confidence * 100)}%`);
+        status(`${d.parcel} needs another look`);
+      } else log("", "payout", `${d.parcel} not paid: ${reason(d.reason)}`);
       break;
     }
     case "CLAIM_ISSUED": {
-      const c = d.claim; S.claims.set(c.parcel_id, { ...c, status: "queued", bytes: null }); S.paidTotal += c.amount;
-      step(c.parcel_id, "signed", "ok");
-      log("ok", "payout", `signed ${c.claim_id}, ${esc(c.holder)}, <b>${fmtKES(c.amount)}</b> (tier ${Math.round(c.tier * 100)}%, confidence ${c.confidence.toFixed(2)})`);
+      const c = d.claim; S.first ??= S.t; S.claims.set(c.parcel_id, { ...c, status: "queued", bytes: null }); S.paidTotal += c.amount;
+      step(c.parcel_id, "claim signed", "ok");
+      log("ok", "payout", `Paid ${esc(c.holder)} <b>${fmtKES(c.amount)}</b> for ${c.parcel_id}, ${Math.round(c.tier * 100)}% tier, ${Math.round(c.confidence * 100)}% sure`);
       renderClaims(); break;
     }
     case "UPLINK_QUEUED": { const c = claimById(d.claim_id); if (c) { c.bytes = d.bytes; c.status = "queued"; } S.uplink.depth = d.depth; S.uplink.pkt = Math.max(S.uplink.pkt, d.bytes); renderClaims(); break; }
@@ -621,24 +796,36 @@ function onEvent(ev) {
     case "LINK_STATE":
       S.uplink.state = d.state; S.uplink.depth = d.depth; setLinkButtons(d.state);
       if (d.state === "offline") log("bad", "link", "<b>offline</b>, claims will queue");
-      else if (d.state === "degraded") log("warn", "link", "<b>degraded</b>, retrying in order");
+      else if (d.state === "degraded") log("warn", "link", "<b>weak signal</b>, retrying in order");
       else log("ok", "link", `online, sending ${d.depth} queued`);
       break;
     case "SENSOR_STATE":
       S.sensorDegraded = d.degraded; $("degrade").classList.toggle("on", d.degraded);
-      log(d.degraded ? "warn" : "", "camera", d.degraded ? "<b>degraded</b>, quality 0.30" : "restored");
+      log(d.degraded ? "warn" : "", "camera", d.degraded ? "<b>blurred</b>, image quality 30%" : "restored");
       break;
-    case "DEGRADED_SENSOR_REPLAN": log("warn", "planner", `replanned for camera quality ${(+d.quality).toFixed(2)}`); break;
-    case "RETURN_TO_HOME": log("warn", "planner", `returning home, ${esc(words(d.reason))}`); break;
+    case "DEGRADED_SENSOR_REPLAN": log("warn", "planner", `Replanned for ${Math.round(d.quality * 100)}% image quality`); break;
+    case "RETURN_TO_HOME": log("warn", "planner", `Returning home: ${esc(reason(d.reason))}`); break;
     case "EPISODE_END":
       if (!SITE) loadRecordings();
       S.done = true; S.focus = new Set(); S.lanes = []; S.activeLane = null;
-      log("ok", "mission", `done, ${(d.distance_m / 1000).toFixed(2)} km, ${d.claims} claims, payout error ${d.payout_mae_pct.toFixed(2)}% of sum insured`);
-      status(`Done. ${d.claims} claims, ${(d.distance_m / 1000).toFixed(1)} km flown`);
+      log("ok", "mission", `Complete: ${(d.distance_m / 1000).toFixed(1)} km, ${d.claims} paid, payout error ${d.payout_mae_pct.toFixed(2)}% of sum insured`);
+      status(`Mission complete. ${d.claims} farmers paid`);
+      finish(d);
       break;
   }
   dirty = true;
 }
+function finish(d) {
+  const min = Math.max(1, Math.round(d.duration_s / 60)), plural = (k, w) => `${k} ${w}${k === 1 ? "" : "s"}`;
+  $("finLede").textContent = d.claims ? `${plural(d.claims, "farmer")} paid ${fmtKES(S.paidTotal)} in ${min} minutes.` : `No payouts were due. Checked in ${min} minutes.`;
+  $("finGrid").innerHTML = [
+    [d.claims, "farmers paid"], [d.first_claim_s == null ? "-" : Math.max(1, Math.round(d.first_claim_s / 60)) + " min", "to first payout"], [(d.distance_m / 1000).toFixed(1) + " km", "flown"],
+    [d.missed_claims ?? "-", "owed but missed"], [d.wrong_claims ?? "-", "wrong amounts"], [d.payout_mae_pct.toFixed(2) + "%", "payout error"],
+  ].map(([v, k]) => `<div><b>${v}</b><small>${k}</small></div>`).join("");
+  $("finish").hidden = false;
+}
+$("finClose").onclick = () => ($("finish").hidden = true);
+$("finAgain").onclick = () => $("start").click();
 function step(pid, text, tone) {
   const c = S.cases.get(pid) || { steps: [] };
   S.cases.delete(pid);
@@ -651,18 +838,18 @@ function toolResult(d) {
   const r = d.result || {};
   if (r.error) { log("bad", "agent", `<b>${esc(d.name)}</b>: ${esc(r.error)}`); return; }
   if (d.name === "survey" && r.accepted) {
-    const ps = r.parcels.map((p) => `${p.id} ${p.confidence.toFixed(2)}`).join(", ");
-    log("", "drone", `flew ${(r.flown_m / 1000).toFixed(2)} km, ${words(r.stop_reason)}. ${ps}`);
+    const ps = r.parcels.map((p) => `${p.id} ${Math.round(p.confidence * 100)}%`).join(", ");
+    log("", "drone", `Flew ${(r.flown_m / 1000).toFixed(2)} km, ${reason(r.stop_reason)}. ${ps}`);
   } else if (d.name === "get_situation") {
-    log("", "belief", "top at risk: " + r.parcels.slice(0, 3).map((p) => `${p.id} ${fmtKES(p.money_at_risk)}`).join(", "));
+    log("", "belief", "Most money in doubt: " + r.parcels.slice(0, 3).map((p) => `${p.id} ${fmtKES(p.money_at_risk)}`).join(", "));
   } else if (d.name === "score_payout") {
-    log("", "payout", `${r.parcel_id} tier ${Math.round(r.tier * 100)}%, ${fmtKES(r.amount)}, gate ${r.gate}`);
+    log("", "payout", `${r.parcel_id} would pay ${fmtKES(r.amount)}, ${Math.round(r.tier * 100)}% tier`);
   } else if (d.name === "get_priors") {
     log("", "priors", `${r.parcel_id} rain +${r.rainfall_anomaly_mm} mm, NDVI ${r.ndvi_delta}, radar loss ${r.radar_loss_prior}`);
   }
 }
 function frame(d) {
-  S.frame = d; S.gate = d.situation.gate_min_confidence; $("gateV").textContent = S.gate.toFixed(2);
+  S.frame = d; S.gate = d.situation.gate_min_confidence; $("gateV").textContent = Math.round(S.gate * 100) + "%";
   const n = S.world ? S.world.grid : 64;
   S.layers.belief = gridCanvas(b64u8(d.mean), n, lossColor, b64u8(d.observed), 0.35);
   S.layers.voi = gridCanvas(b64u8(d.voi), n, voiColor);
@@ -670,24 +857,26 @@ function frame(d) {
   S.perception = d.perception; S.uplink = { ...S.uplink, ...d.uplink, bytes: d.uplink.bytes_sent, pkt: d.uplink.packet_bytes };
   setLinkButtons(d.uplink.state);
   renderParcels();
+  renderSheet();
   conditions(d.conditions);
 }
 function conditions(c) {
   if (!c) return;
   const w = c.weather, f = c.flight, cam = c.camera;
   const cls = (v, warn, bad) => (v >= bad ? "bad" : v >= warn ? "warn" : "");
-  const tone = { "": "var(--green)", warn: "var(--orange)", bad: "var(--red)" };
-  let wind = '<span>Wind<b>no forecast loaded</b></span>';
+  const tone = { "": "var(--label)", warn: "var(--yellow)", bad: "var(--red)" };
+  let wind = '<span>Forecast<b>none loaded</b></span>';
   if (w) {
     const k = cls(w.wind_mps / w.limit_mps, 0.8, 1);
-    const bars = w.calm_share_next_hours.map((p) => `<i style="height:${Math.max(2, p * 14)}px;background:${p >= 0.95 ? "var(--green)" : "var(--label-3)"}"></i>`).join("");
+    const bars = w.calm_share_next_hours.map((p) => `<i style="height:${Math.max(2, p * 14)}px;background:${p >= 0.95 ? "var(--label)" : "var(--label-3)"}"></i>`).join("");
     const when = w.next_window_in_min == null ? "no window in range" : w.next_window_in_min === 0 ? "flyable now" : `window in ${Math.floor(w.next_window_in_min / 60)} h ${w.next_window_in_min % 60} min`;
     wind = `<span>Wind<b class="${k}">${w.wind_mps.toFixed(1)} / ${w.limit_mps} m/s</b><span class="meter"><i style="width:${Math.min(100, (100 * w.wind_mps) / w.limit_mps)}%;background:${tone[k]}"></i></span></span>
       <span>Forecast<span class="spark">${bars}</span><b>${when}</b></span>`;
   }
-  const air = c.wind_at_drone ? `<span>At the drone<b>${c.wind_at_drone.mps.toFixed(1)} m/s from ${c.wind_at_drone.from_deg}°, ${f.power_w} W</b></span>` : "";
-  $("cond").innerHTML = `${wind}${air}<span>Flight<b>${f.altitude_m} m, ${f.speed_mps} m/s</b></span>
-    <span>Camera<b class="${cam.degraded ? "warn" : ""}">${cam.quality.toFixed(2)}${cam.degraded ? ", degraded" : ""}</b></span>`;
+  const compass = (deg) => ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][Math.round(deg / 45) % 8];
+  const air = c.wind_at_drone ? `<span>Wind at drone<b>${c.wind_at_drone.mps.toFixed(1)} m/s ${compass(c.wind_at_drone.from_deg)}</b></span><span>Motors<b>${f.power_w} W</b></span>` : "";
+  $("cond").innerHTML = `${wind}${air}<span>Flying<b>${f.altitude_m} m up, ${f.speed_mps} m/s</b></span>
+    <span>Image quality<b class="${cam.degraded ? "warn" : ""}">${Math.round(cam.quality * 100)}%${cam.degraded ? ", blurred" : ""}</b></span>`;
 }
 function renderParcels() {
   const f = S.frame; if (!f) return;
@@ -695,40 +884,47 @@ function renderParcels() {
   $("parcels").innerHTML = f.situation.parcels.map((p) => {
     const conf = p.confidence, gate = S.gate, pass = conf >= gate;
     const claimed = S.claims.has(p.id), refused = S.refused.has(p.id) && !claimed, focus = S.focus.has(p.id);
-    const st = claimed ? "paid" : refused ? "refused" : focus ? "surveying" : "";
+    const st = claimed ? "paid" : refused ? "refused" : focus ? "surveying" : "", c = S.claims.get(p.id);
     const lo = p.ci95[0] * 100, hi = p.ci95[1] * 100;
-    return `<tr class="${focus ? "focus" : ""}"><td><b>${p.id}</b> <span class="muted crop">${p.crop}</span></td><td>${esc(holders[p.id] || "")}</td>
+    return `<tr data-id="${p.id}" tabindex="0" class="${focus ? "focus" : ""}${p.id === sel ? " sel" : ""}" aria-selected="${p.id === sel}"><td><b>${p.id}</b> <span class="muted crop">${p.crop}</span></td><td>${esc(holders[p.id] || "")}</td>
       <td><div style="display:flex;align-items:center;gap:8px"><div class="ci"><i style="left:${lo}%;width:${Math.max(1, hi - lo)}%"></i><b style="left:${p.loss * 100}%"></b></div><span class="mono">${Math.round(p.loss * 100)}%</span></div></td>
-      <td><div style="display:flex;align-items:center;gap:8px"><div class="bar"><i style="width:${conf * 100}%;background:${pass ? "var(--green)" : "rgba(235,235,245,0.45)"}"></i><span class="gate" style="left:${gate * 100}%"></span></div><span class="mono" style="color:${pass ? "var(--green)" : "inherit"}">${conf.toFixed(2)}</span></div></td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="bar"><i style="width:${conf * 100}%;background:${pass ? "var(--label)" : "rgba(235,235,245,0.4)"}"></i><span class="gate" style="left:${gate * 100}%"></span></div><span class="${pass ? "" : "muted"}">${Math.round(conf * 100)}%</span></div></td>
       <td class="num">${p.money_at_risk ? fmtKES(p.money_at_risk) : '<span class="muted">-</span>'}</td>
-      <td class="num">${p.payout_at_estimate ? fmtKES(p.payout_at_estimate) : '<span class="muted">0</span>'}</td><td class="st-${st}">${st}</td></tr>`;
+      <td class="num">${c ? `<b>${fmtKES(c.amount)}</b>` : p.payout_at_estimate ? `<span class="muted">${fmtKES(p.payout_at_estimate)}</span>` : '<span class="muted">-</span>'}</td>
+      <td>${st ? `<span class="pill ${st}">${STATUS[st]}</span>` : ""}</td></tr>`;
   }).join("");
 }
 function renderClaims() {
   const rows = [...S.cases.entries()].reverse();
   const sent = [...S.claims.values()].filter((c) => c.status === "sent").length;
-  $("claimNote").textContent = S.claims.size ? `${S.claims.size} signed, ${sent} sent` : rows.length ? `${rows.length} open` : "";
+  $("claimNote").textContent = S.claims.size ? `${S.claims.size} signed, ${sent} delivered` : rows.length ? `${rows.length} open` : "";
   $("claims").innerHTML = rows.length ? rows.map(([pid, k]) => {
     const c = S.claims.get(pid), held = k.steps.at(-1).tone === "bad";
-    const state = c ? `<span class="pkt ${c.status}">${c.bytes ? c.bytes + " B " : ""}${c.status}</span>` : `<span class="pkt ${held ? "" : "queued"}">${held ? "review" : "open"}</span>`;
+    const state = c ? `<span class="pkt ${c.status}">${c.status === "sent" ? "Delivered" : "Waiting for signal"}</span>` : `<span class="pkt ${held ? "" : "queued"}">${held ? "With a person" : "In review"}</span>`;
     const name = S.world ? S.world.parcels.find((p) => p.id === pid)?.holder || "" : "";
-    return `<div class="claim"><span class="id">${pid}</span><span>${esc(name)}</span>
+    return `<div class="claim${pid === sel ? " sel" : ""}" data-id="${pid}" role="listitem" tabindex="0"><span class="id">${pid}</span><span>${esc(name)}</span>
       <span class="amt">${c ? fmtKES(c.amount) : ""}</span>${state}
       <div class="steps">${k.steps.map((x) => `<span class="step ${x.tone}">${x.text}</span>`).join("")}</div></div>`;
-  }).join("") : '<div class="empty">None yet.</div>';
+  }).join("") : '<div class="empty"><b>No claims yet</b>A claim appears here once it is signed, and again when the farmer\'s SMS is delivered.</div>';
+  renderSheet();
   $("hPaid").textContent = S.claims.size;
+  $("hPaidSub").textContent = S.world ? `of ${S.world.parcels.length} parcels` : "";
   $("hAmount").textContent = fmtKES(S.paidTotal);
+  $("hSent").textContent = S.claims.size ? `${sent} delivered by SMS` : "";
 }
 function footer() {
   const b = S.battery, b0 = S.battery0 || 1;
   $("fBatt").textContent = b == null ? "-" : b.toFixed(1) + " Wh";
   $("fBattBar").style.width = (b == null ? 100 : (100 * b) / b0) + "%";
-  $("fBattBar").style.background = b != null && b / b0 < 0.25 ? "var(--red)" : b != null && b / b0 < 0.5 ? "var(--orange)" : "var(--green)";
+  $("fBattBar").style.background = b != null && b / b0 < 0.25 ? "var(--red)" : b != null && b / b0 < 0.5 ? "var(--yellow)" : "var(--green)";
   $("fDist").textContent = (S.distance / 1000).toFixed(2) + " km";
   $("hDist").textContent = (S.distance / 1000).toFixed(1) + " km";
+  $("hBatt").textContent = b == null ? "" : `battery ${Math.round((100 * b) / b0)}%`;
+  $("hFirst").textContent = S.first == null ? "-" : Math.max(1, Math.round(S.first / 60)) + " min";
+  $("live").className = S.done ? "done" : S.world ? "on" : "";
   $("fSortie").textContent = S.world && S.policy === "agent" ? `sortie cap ${(S.world.sortie_m / 1000).toFixed(1)} km` : "";
   $("fSensor").textContent = S.sensor ? (S.sensorDegraded ? "degraded" : S.sensor) : "-";
-  $("fSensor").style.color = S.sensorDegraded ? "var(--orange)" : "";
+  $("fSensor").style.color = S.sensorDegraded ? "var(--yellow)" : "";
   $("fQual").textContent = S.quality != null ? `quality ${S.quality.toFixed(2)}` : "";
   const P = S.perception;
   $("fLat").textContent = P && P.n ? `${P.p50_ms.toFixed(2)} / ${P.p95_ms.toFixed(2)} ms` : S.sensor === "classical" ? "classical" : "-";
@@ -743,7 +939,7 @@ function footer() {
   $("fTime").textContent = clock(S.t);
   $("fPolicy").textContent = PILOT[S.policy] || "";
 }
-setInterval(footer, 200);
+setInterval(() => { footer(); faulty(); }, 200);
 
 // ---------- controls ----------
 // On the static site there is no server: recorded runs replay here instead.
@@ -774,7 +970,7 @@ function hello(d) {
   const pol = $("policy");
   pol.querySelector('[value="agent"]').textContent = d.agent_available ? "AI agent" : "AI agent (no API key)";
   if (!d.running && !S.world) pol.value = d.agent_available ? "agent" : "infogain";
-  $("speed").value = d.speed; $("speedv").textContent = d.speed + "x";
+  $("speed").value = d.speed; $("speedv").textContent = d.speed + "×";
   const has = (sel, v) => [...$(sel).options].some((o) => o.value === v);
   if (has("scenario", d.scenario)) $("scenario").value = d.scenario;
   if (d.running && has("policy", d.policy)) pol.value = d.policy;
@@ -783,15 +979,30 @@ function hello(d) {
 $("start").onclick = () => send({ cmd: "start", scenario: $("scenario").value, policy: $("policy").value });
 let paused = false;
 $("pause").onclick = () => { paused = !paused; send({ cmd: "pause", on: paused }); $("pause").textContent = paused ? "Resume" : "Pause"; $("pause").classList.toggle("on", paused); };
-$("speed").oninput = (e) => { $("speedv").textContent = e.target.value + "x"; send({ cmd: "speed", value: +e.target.value }); };
+$("speed").oninput = (e) => { $("speedv").textContent = e.target.value + "×"; send({ cmd: "speed", value: +e.target.value }); };
 for (const b of $("link").children) b.onclick = () => send({ cmd: "link", state: b.dataset.v });
 $("degrade").onclick = () => send({ cmd: "degrade", on: !S.sensorDegraded });
+$("faults").addEventListener("beforetoggle", (e) => {
+  if (e.newState !== "open") return;
+  const r = $("faultsBtn").getBoundingClientRect();
+  Object.assign($("faults").style, { top: r.bottom + 8 + "px", left: Math.max(12, r.right - 280) + "px" });
+});
+const faulty = () => $("faultsBtn").classList.toggle("dot", S.sensorDegraded || S.uplink.state !== "online");
+const store = (k, v) => { try { return v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); } catch { return null; } };
+let diagOn = store("kipimo.diag") === "1";
+function diag(on) {
+  diagOn = on; store("kipimo.diag", on ? "1" : "0");
+  $("diag").hidden = !on || view !== "mission"; $("diagBtn").setAttribute("aria-pressed", on); $("diagBtn").classList.toggle("on", on);
+  resize();
+}
+$("diagBtn").onclick = () => diag(!diagOn);
 for (const c of $("logf").children) c.onclick = () => { $("log").dataset.f = c.dataset.f; for (const x of $("logf").children) x.classList.toggle("active", x === c); };
 for (const c of $("layers").children) c.onclick = () => { layer = c.dataset.l; for (const x of $("layers").children) x.classList.toggle("active", x === c); legend(); dirty = true; };
 document.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
   if (e.key === "1" || e.key === "2" || e.key === "3") $("layers").children[+e.key - 1].click();
-  if (e.key === " ") { e.preventDefault(); $("pause").click(); }
+  if (e.key === " " && !e.target.closest("button, [data-id]")) { e.preventDefault(); $("pause").click(); }
+  if (e.key === "Escape" && sel) select(null);
 });
 
 let batch = [];
@@ -803,7 +1014,7 @@ function connect() {
   ws.onclose = () => setTimeout(connect, 1000);
 }
 if (SITE) {
-  for (const el of [$("scenario").parentElement, $("link").parentElement, $("degrade")]) el.hidden = true;
+  for (const el of [$("scenario").parentElement, $("faultsBtn")]) el.hidden = true;
   $("policy").innerHTML = "";
   $("overlay").textContent = "Loading a recorded run…";
 } else fetch("/api/scenarios").then((r) => r.json()).then((list) => {
@@ -819,7 +1030,13 @@ function loadRecordings() {
   });
 }
 loadRecordings().then(() => SITE && $("start").click());
-resize(); legend(); renderClaims(); loop();
+legend(); renderClaims(); loop();
+
+// segmented controls: aria-pressed mirrors the active class, wherever it is set
+const pressed = (b) => b.setAttribute("aria-pressed", b.classList.contains("active"));
+document.querySelectorAll(".seg button").forEach(pressed);
+new MutationObserver((ms) => ms.forEach((m) => m.target.matches(".seg button") && pressed(m.target))).observe(document.body, { subtree: true, attributeFilter: ["class"] });
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ---------- views ----------
 const cache = {};
@@ -830,7 +1047,7 @@ function show(v) {
   for (const b of $("view").children) b.classList.toggle("active", b.dataset.v === v);
   for (const id of ["mission", "district", "evals"]) $("v-" + id).hidden = id !== v;
   $("mctl").hidden = v !== "mission";
-  document.querySelector("footer").hidden = v !== "mission";
+  $("diag").hidden = v !== "mission" || !diagOn;
   if (v === "district") district().catch((e) => ($("dnote").textContent = `could not load: ${e.message}`));
   if (v === "evals") evals().catch((e) => ($("v-evals").innerHTML = `<div class="banner">Could not load evals: ${esc(e.message)}</div>`));
   if (v === "mission") resize();
@@ -844,16 +1061,17 @@ async function district() {
   $("dnote").textContent = "flying both plans…";
   const D = await getJSON(api("district", $("dseed").value)), P = D.plans[plan];
   const flooded = D.villages.filter((v) => v.flooded && v.expected > 0);
-  $("dnote").textContent = `${flooded.length} flooded of ${D.villages.length} villages, ${D.hubs.length} hubs, reach ${D.reach_km} km, hubs cover ${Math.round(D.covered * 100)}% of insured value`;
-  const g = D.plans.greedy, n = D.plans.nearest, less = 1 - g.kes_hours_waiting / n.kes_hours_waiting;
+  $("dnote").textContent = `${flooded.length} of ${D.villages.length} villages flooded, ${D.hubs.length} drone hubs, ${D.reach_km} km reach`;
+  const g = D.plans.greedy, n = D.plans.nearest, less = 1 - g.kes_hours_waiting / n.kes_hours_waiting, top = Math.max(g.kes_hours_waiting, n.kes_hours_waiting);
   $("dstats").innerHTML = [
-    ["Money waiting, greedy", `${g.kes_hours_waiting.toLocaleString()} KES-h`],
-    ["Money waiting, nearest hub", `${n.kes_hours_waiting.toLocaleString()} KES-h`],
-    ["Greedy leaves less waiting by", `${Math.round(less * 100)}%`],
-    ["Owed but out of reach", fmtKES(P.owed_unreached)],
-    ["Last village settled", `${P.makespan_h} h`],
-  ].map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join("");
-  $("dqueues").innerHTML = Object.entries(P.queues).map(([h, q]) => `<div class="queue"><b>${h}</b>${q.length ? q.map((v) => `${v} ${P.settled_h[v]} h`).join("  →  ") : "idle"}</div>`).join("");
+    ["Less money waiting", `${Math.round(less * 100)}%`, "most money first, against nearest first"],
+    ["Last village paid", `${P.makespan_h} h`, "after the flood"],
+    ["Owed but out of reach", fmtKES(P.owed_unreached), "beyond every hub's battery"],
+    ["Hubs cover", `${Math.round(D.covered * 100)}%`, "of insured value"],
+  ].map(([k, v, sub]) => `<div><small>${k}</small><b>${v}</b><span>${sub}</span></div>`).join("");
+  $("dcompare").innerHTML = `<div class="cmp">${[["Most money first", g], ["Nearest first", n]].map(([k, x]) =>
+    `<span>${k}</span><i class="${x === g ? "best" : ""}" style="width:${(100 * x.kes_hours_waiting) / top}%"></i><b>${Math.round(x.kes_hours_waiting).toLocaleString()}</b>`).join("")}</div>`;
+  $("dqueues").innerHTML = Object.entries(P.queues).map(([h, q]) => `<div class="queue"><b>${h}</b>${q.length ? q.map((v) => `<span>${v}<small>${P.settled_h[v]} h</small></span>`).join("→") : "idle"}</div>`).join("");
   drawDistrict(D, P);
 }
 function drawDistrict(D, P) {
@@ -907,13 +1125,17 @@ async function evals() {
   const card = (title, body) => `<section class="panel"><h2>${title}</h2>${body}</section>`;
   const rows = (sm, list) => `<div class="kv">${list.map(([k, l, f]) => `<span>${l}</span><b>${val(sm[k], f)}${ciTxt(sm[k], f)}</b>`).join("")}</div>`;
   const dist = E.districts[0]?.summary.greedy;
+  const hero = (k, v, sub) => `<section class="panel hero"><small>${k}</small><b>${v}</b><span>${sub}</span></section>`, mae = base.summary["outcome.payout_mae_pct"];
   $("v-evals").innerHTML = `<div class="banner">${live.length ? `Live model runs: ${live.map((x) => x.name).join(", ")}.` : "<b>No live model scored yet.</b> These are the rule-based fallbacks, the bar a live model has to beat."} ${base.cases} held-out cases, means with 95% bootstrap intervals.</div>`
-    + card("Safety", `<div class="big">${Math.round(base.summary["safety.pass_k"][0] * 100)}%</div><div class="queue">of cases with zero violations in every trial</div><div class="kv">${safety.map(([k, m]) => `<span>${words(k.slice(7))}</span><b>${val(m, 0)}</b>`).join("")}</div>`)
+    + hero("Safety", `${Math.round(base.summary["safety.pass_k"][0] * 100)}%`, "of cases with no rule broken in any trial")
+    + hero("Payout error", `${val(mae, 2)}%`, `of sum insured, ${val([mae[1]], 2)} to ${val([mae[2]], 2)}%`)
+    + (dist ? hero("District dispatch", `${Math.round(dist.less_than_nearest[0] * 100)}%`, `less money waiting than nearest first, ${Math.round(dist.less_than_nearest[1] * 100)} to ${Math.round(dist.less_than_nearest[2] * 100)}% across ${dist.districts} districts`) : "")
     + SECTIONS.map(([t, list]) => card(t, rows(base.summary, list))).join("")
     + (mem ? card("Memory across missions", rows(mem.summary, [["farmer.discounted", "Reports discounted per flood", 2], ["outcome.distance_km", "Distance with memory, km", 1], ["outcome.payout_mae_pct", "Payout error with memory, %", 2]])) : "")
-    + (dist ? card("District dispatch", `<div class="big">${Math.round(dist.less_than_nearest[0] * 100)}%</div><div class="queue">less money waiting than nearest hub first, ${Math.round(dist.less_than_nearest[1] * 100)} to ${Math.round(dist.less_than_nearest[2] * 100)}% across ${dist.districts} held-out districts</div>`) : "");
+    + card("Rules never broken", `<div class="kv">${safety.map(([k, m]) => `<span>${words(k.slice(7)).replace("nofly", "no-fly")}</span><b>${val(m, 0)}</b>`).join("")}</div>`);
 }
 window.addEventListener("resize", () => { if (view === "district") district(); });
+diag(diagOn);
 </script>
 <script type="module">
 // 3D: the live map draped on real terrain, water shaded by depth, the drone flown with its physics.
@@ -931,6 +1153,8 @@ renderer.setPixelRatio(Math.min(2, devicePixelRatio));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 box.prepend(renderer.domElement);
+renderer.domElement.setAttribute("role", "img");
+renderer.domElement.setAttribute("aria-label", "3D view of the fields on real terrain, with the drone. Click a field for details.");
 
 const scene = new THREE.Scene();
 scene.background = gradient(["#050608", "#12151b", "#1e232c"]);
@@ -939,7 +1163,7 @@ const camera = new THREE.PerspectiveCamera(38, 1, 2, 12000);
 camera.position.set(820, 760, 1050);
 const controls = new OrbitControls(camera, renderer.domElement);
 Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, maxPolarAngle: 1.45, minDistance: 80, maxDistance: 3400, autoRotateSpeed: 0.4 });
-controls.addEventListener("start", () => { touched = true; fly = null; });
+controls.addEventListener("start", () => { touched = true; fly = null; $("hint").hidden = true; });
 
 scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x2a241c, 1.4));
 const sun = new THREE.DirectionalLight(0xfff1dc, 2.4);
@@ -977,26 +1201,6 @@ function paintGround() {
 }
 const canvas = (w) => Object.assign(document.createElement("canvas"), { width: w, height: w });
 let edges = null;
-function fieldEdges() {
-  // each parcel's mask, blurred and upsampled, so borders follow the field, not the 4 m cells.
-  // R: bund line, G: unplanted headland, B: inside a field
-  const W = S.world, n = W.map_px, R = 1024, pm = S.pmap, m = canvas(n), mg = m.getContext("2d"), img = mg.createImageData(n, n);
-  const up = canvas(R), ug = up.getContext("2d", { willReadFrequently: true }), out = new Uint8Array(R * R * 4);
-  ug.filter = "blur(4px)";
-  for (const id of new Set(pm)) {
-    if (id === 255) continue;
-    for (let i = 0; i < n * n; i++) img.data[i * 4 + 3] = pm[i] === id ? 255 : 0;
-    mg.putImageData(img, 0, 0); ug.clearRect(0, 0, R, R); ug.drawImage(m, 0, 0, R, R);
-    const a = ug.getImageData(0, 0, R, R).data;
-    for (let j = 3; j < a.length; j += 4) {
-      const d = Math.abs(a[j] - 128);
-      out[j - 3] = Math.max(out[j - 3], 255 - d * 9);
-      out[j - 2] = Math.max(out[j - 2], a[j] > 20 ? 255 - Math.max(0, a[j] - 128) * 2.2 : 0);
-      out[j - 1] = Math.max(out[j - 1], a[j]);
-    }
-  }
-  return out;
-}
 function parcelLines() {
   const R = 1024, c = canvas(R), g = c.getContext("2d"), img = g.createImageData(R, R);
   for (let j = 0; j < R * R; j++) { img.data.fill(255, j * 4, j * 4 + 3); img.data[j * 4 + 3] = edges[j * 4]; }
@@ -1032,7 +1236,11 @@ function world(d) {
   land.add(ground, skirt(), water(g));
   land.scale.y = EX;
   tags.innerHTML = "";
-  parcelTags = d.parcels.map((q) => ({ q, el: tag(`<i></i><b>${q.id}</b><span></span>`) }));
+  parcelTags = d.parcels.map((q) => {
+    const el = tag(`<i></i><b>${q.id}</b><span></span>`);
+    el.onclick = () => window.select(q.id);
+    return { q, el };
+  });
   $("s3site").textContent = d.site && d.site !== "synthetic" ? d.site : "Procedural floodplain";
   build();
   if (!touched) flyTo(new THREE.Vector3(span * 0.55, span * 1.05, span * 0.95), new THREE.Vector3(0, 0, 0));
@@ -1052,7 +1260,7 @@ function bareEarth(dsm) {
   hgt = dsm.map((h, k) => (canopy[k] > 1 ? mean[k] : h));
 }
 const CROPS = { maize: 0, rice: 1, sorghum: 2 };
-const U = { tSat: { value: null }, uSatRect: { value: new THREE.Vector4(0, 0, 1, 1) }, uSat: { value: 1 }, tEdge: { value: null }, tParcel: { value: null }, tInfo: { value: null }, tDamage: { value: null }, tOverlay: { value: groundTex }, uSpan: { value: 1024 }, uStage: { value: 0 }, uOverlay: { value: 0 } };
+const U = { tSat: { value: null }, uSatRect: { value: new THREE.Vector4(0, 0, 1, 1) }, uSat: { value: 1 }, tEdge: { value: null }, tParcel: { value: null }, tInfo: { value: null }, tDamage: { value: null }, tOverlay: { value: groundTex }, uSpan: { value: 1024 }, uStage: { value: 0 }, uOverlay: { value: 0 }, uSel: { value: -1 } };
 function farmTextures(d) {
   const tex = (data, w, h, fmt, filter) => Object.assign(new THREE.DataTexture(data, w, h, fmt), { magFilter: filter, minFilter: filter, needsUpdate: true });
   const info = new Uint8Array(64 * 4);
@@ -1097,7 +1305,7 @@ farmMat.onBeforeCompile = (sh) => {
     .replace("#include <common>", "#include <common>\nuniform float uSpan; varying vec2 vMap; varying float vH;")
     .replace("#include <begin_vertex>", "#include <begin_vertex>\nvMap = position.xz + uSpan * 0.5; vH = position.y;");
   sh.fragmentShader = sh.fragmentShader.replace("#include <common>", `#include <common>
-    varying vec2 vMap; varying float vH; uniform sampler2D tDamage, tOverlay, tEdge, tSat; uniform float uStage, uOverlay, uSat; uniform vec4 uSatRect;${NOISE}`)
+    varying vec2 vMap; varying float vH; uniform sampler2D tDamage, tOverlay, tEdge, tSat; uniform float uStage, uOverlay, uSat, uSel; uniform vec4 uSatRect;${NOISE}`)
     .replace("#include <map_fragment>", `
     vec3 edge = texture2D(tEdge, vMap / uSpan).rgb;
     float pid = parcelAt(vMap), bund = smoothstep(0.35, 0.8, edge.r), head = smoothstep(0.55, 0.95, edge.g), inside = smoothstep(0.35, 0.65, edge.b);
@@ -1135,6 +1343,7 @@ farmMat.onBeforeCompile = (sh) => {
     col = pow(col, vec3(2.2));
     vec2 st = vMap / uSpan;
     col = mix(col, texture2D(tOverlay, vec2(st.x, 1.0 - st.y)).rgb, uOverlay);
+    if (abs(pid - uSel) < 0.5) col = mix(col * 1.25, vec3(0.04, 0.52, 1.0), 0.12 + 0.5 * bund);
     diffuseColor.rgb = col;`);
 };
 
@@ -1367,8 +1576,8 @@ function place(el, at) {
 const paid = new Map(), rings = [];
 function updateTags() {
   for (const { q, el } of parcelTags) {
-    const c = S.claims.get(q.id), st = c ? "paid" : S.refused.has(q.id) ? "refused" : S.focus.has(q.id) ? "focus" : "";
-    if (el.dataset.st !== st) { el.className = "l3 " + st; el.dataset.st = st; el.querySelector("span").textContent = c ? fmtKES(c.amount) : st === "refused" ? "needs another look" : ""; }
+    const c = S.claims.get(q.id), st = (c ? "paid" : S.refused.has(q.id) ? "refused" : S.focus.has(q.id) ? "focus" : "") + (sel === q.id ? " sel" : "");
+    if (el.dataset.st !== st) { el.className = "l3 pick " + st; el.dataset.st = st; el.querySelector("span").textContent = c ? fmtKES(c.amount) : st === "refused" ? "needs another look" : ""; }
     if (c && !paid.has(q.id)) { paid.set(q.id, true); pulse(q); }
     place(el, P(q.cx, q.cy, h0(q.cx, q.cy) * EX + 14));
   }
@@ -1376,6 +1585,7 @@ function updateTags() {
   if (hubTag) place(hubTag.el, hubTag.at);
 }
 function pulse(q) {
+  if (calm) return;
   const m = new THREE.Mesh(new THREE.RingGeometry(10, 13, 64).rotateX(-Math.PI / 2), fade(new THREE.MeshBasicMaterial({ color: 0x30d158, side: THREE.DoubleSide })));
   m.position.copy(P(q.cx, q.cy, h0(q.cx, q.cy) * EX + 2)); m.t = 0; scene.add(m); helper(m); rings.push(m);
 }
@@ -1412,7 +1622,7 @@ function updateDrone(dt) {
   const pts = [];
   ring.forEach((p, i) => pts.push(drone.position, p, ring[(i + 1) % ring.length]));
   cone.geometry.setFromPoints(pts);
-  const col = S.sensorDegraded ? 0xff9f0a : 0xffffff;
+  const col = S.sensorDegraded ? 0xffd60a : 0xffffff;
   foot.material.color.setHex(col); coneMat.color.setHex(col);
 }
 
@@ -1420,7 +1630,8 @@ function updateDrone(dt) {
 const droneCam = new THREE.PerspectiveCamera(80, 1, 1, 6000), pip = $("pip");
 let pipBox = null;
 function renderPip() {
-  const on = drone.visible && !!S.world;
+  const [hx, hy] = S.world?.home || [0, 0];
+  const on = drone.visible && !!S.world && !S.done && Math.hypot(S.pose.x - hx, S.pose.y - hy) > 20;
   pip.classList.toggle("on", on);
   pipBox = null;
   if (!on) return;
@@ -1455,12 +1666,12 @@ for (const b of $("camMode").children) b.onclick = () => setMode(b.dataset.c);
 for (const b of $("exag").children) b.onclick = () => {
   EX = +b.dataset.e; land.scale.y = EX; trail.n = -1;
   for (const x of $("exag").children) x.classList.toggle("active", x === b);
-  $("s3ex").textContent = `heights x${EX}`;
+  $("s3ex").textContent = `Heights ×${EX}`;
   if (S.world) build();
 };
 const prevLook = new THREE.Vector3();
 function steer(dt) {
-  const k = 1 - Math.exp(-dt * 3);
+  const k = calm ? 1 : 1 - Math.exp(-dt * 3);
   if (mode === "follow" && S.pose && drone.visible) {
     const back = new THREE.Vector3(-Math.cos(S.pose.yaw), 0, -Math.sin(S.pose.yaw));
     prevLook.copy(controls.target);
@@ -1471,7 +1682,7 @@ function steer(dt) {
     camera.position.lerp(fly.pos, k); controls.target.lerp(fly.look, k);
     if (camera.position.distanceTo(fly.pos) < 2) fly = null;
   }
-  controls.autoRotate = mode === "orbit" && !touched && !fly && (!S.pose || S.done);
+  controls.autoRotate = !calm && mode === "orbit" && !touched && !fly && (!S.pose || S.done);
   $("compass").style.transform = `rotate(${controls.getAzimuthalAngle()}rad)`;
 }
 
@@ -1494,7 +1705,30 @@ for (const b of $("groundMode").children) b.onclick = () => {
   $("credit").style.display = U.uSat.value ? "" : "none";
   for (const x of $("groundMode").children) x.classList.toggle("active", x === b);
 };
-window.view3d = { world };
+// click the ground to pick a field; a drag is an orbit, not a click
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+let down = null;
+renderer.domElement.addEventListener("pointerdown", (e) => (down = [e.clientX, e.clientY]));
+renderer.domElement.addEventListener("pointerup", (e) => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 4 || !S.world || !land.children[0]) return;
+  const r = renderer.domElement.getBoundingClientRect();
+  ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObject(land.children[0])[0], W = S.world, m = W.map_px;
+  if (!hit) return window.select(null);
+  const j = Math.floor(((hit.point.x + span / 2) / span) * m), i = Math.floor(((hit.point.z + span / 2) / span) * m);
+  const k = S.pmap[Math.min(m - 1, Math.max(0, i)) * m + Math.min(m - 1, Math.max(0, j))];
+  window.select(k === 255 ? null : W.parcels[k].id);
+});
+function pick(id) {
+  const k = id ? S.world.parcels.findIndex((q) => q.id === id) : -1;
+  U.uSel.value = k;
+  if (k >= 0 && mode !== "follow") {
+    const q = S.world.parcels[k], at = P(q.cx, q.cy, h0(q.cx, q.cy) * EX), off = camera.position.clone().sub(controls.target).setLength(520);
+    touched = true; flyTo(at.clone().add(off), at);
+  }
+}
+window.view3d = { world, select: pick };
 
 function tick() {
   requestAnimationFrame(tick);
