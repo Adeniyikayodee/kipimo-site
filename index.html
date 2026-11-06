@@ -32,8 +32,6 @@ button, select, input { font: inherit; color: inherit; }
 
 header { display: flex; align-items: center; gap: 14px; padding: 10px 16px; min-height: 52px; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--sep); flex-wrap: wrap; position: relative; z-index: 2; }
 .brand { font-size: 17px; font-weight: 600; letter-spacing: -.02em; margin-right: 4px; }
-.group { display: flex; align-items: center; gap: 8px; }
-.group label { color: var(--label-2); }
 select, .btn { background: var(--fill); border: 0; border-radius: 8px; padding: 5px 12px; cursor: pointer; transition: background .15s; }
 select { padding-right: 8px; }
 select:hover, .btn:hover { background: rgba(118, 118, 128, .34); }
@@ -52,17 +50,18 @@ input[type=range] { width: 100px; accent-color: var(--blue); }
 .btn.dot::after { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); margin-left: 7px; vertical-align: 1px; }
 [popover] { margin: 0; inset: auto; border: 1px solid var(--sep); border-radius: 14px; padding: 14px 16px 16px; width: 280px; color: var(--label);
   background: rgba(44, 44, 46, .86); -webkit-backdrop-filter: saturate(180%) blur(30px); backdrop-filter: saturate(180%) blur(30px); box-shadow: 0 18px 50px rgba(0, 0, 0, .5); }
-#faults h3 { margin: 0; font-size: 15px; font-weight: 600; }
-#faults p { margin: 2px 0 12px; color: var(--label-2); }
-#faults label { display: block; margin: 10px 0 6px; color: var(--label-2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
-#faults .seg { display: flex; } #faults .seg button { flex: 1; }
-#faults .btn { width: 100%; }
-@media (max-width: 1280px) { .group label { display: none; } }
+#more label { display: block; margin: 12px 0 6px; color: var(--label-2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+#more label:first-child { margin-top: 0; }
+#more .seg { display: flex; } #more .seg button { flex: 1; }
+#more .btn { width: 100%; }
+#start { min-width: 84px; }
+@media (max-width: 1280px) { #policy { max-width: 150px; } input[type=range] { width: 70px; } }
+.seg button, select, .btn { white-space: nowrap; }
 
 main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(420px, 1fr); gap: 12px; padding: 12px; min-height: 0; overflow: hidden; }
 .panel { background: var(--surface); border-radius: 14px; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .panel h2 { margin: 0; padding: 12px 14px 8px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; display: flex; align-items: center; gap: 12px; }
-.panel h2 .note { margin-left: auto; font-size: 13px; font-weight: 400; color: var(--label-2); }
+.panel h2 .note { margin-left: auto; min-width: 0; font-size: 13px; font-weight: 400; color: var(--label-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .panel h2 .seg { font-size: 13px; }
 
 .cond { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 0 14px 12px; color: var(--label-2); align-items: center; }
@@ -72,24 +71,23 @@ main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(420px, 1fr
 .meter i { display: block; height: 100%; }
 .spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; margin-left: 8px; vertical-align: middle; }
 .spark i { width: 5px; border-radius: 1px; }
-#mapWrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 4px 12px 8px; }
+#mapWrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative; padding: 0 12px; }
 canvas#map { background: #111113; border-radius: 10px; }
-#scene3d { position: absolute; inset: 4px 12px 8px; display: none; border-radius: 10px; overflow: hidden; background: #111113; }
+#scene3d { position: absolute; inset: 0 12px; display: none; border-radius: 10px; overflow: hidden; background: #111113; }
 #scene3d.on { display: block; }
 #scene3d canvas { display: block; }
 #scene3d .hud { position: absolute; z-index: 2; display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--label-2); pointer-events: none; }
 #scene3d .hud > * { pointer-events: auto; }
-#scene3d .hud.tl { left: 14px; top: 12px; flex-direction: column; align-items: flex-start; gap: 1px; text-shadow: 0 1px 3px #000; }
 #scene3d .hud.bl .col { display: flex; flex-direction: column; min-width: 0; }
-#scene3d .hud.tl b { color: var(--label); font-size: 13px; font-weight: 600; }
-#scene3d .hud.tr { right: 12px; top: 10px; opacity: 0; transition: opacity .25s; }
+#scene3d .hud.tr { right: 12px; top: 64px; opacity: 0; transition: opacity .25s; }
 #scene3d:hover .hud.tr, #scene3d:focus-within .hud.tr { opacity: 1; }
 @media (hover: none) { #scene3d .hud.tr { opacity: 1; } }
-#scene3d .hud.bl { left: 12px; bottom: 10px; right: 290px; color: var(--label-3); }
+#scene3d .hud.bl { left: 12px; bottom: 10px; right: 230px; color: var(--label-3); }
+#scene3d .hud.bl .col b { color: var(--label-2); font-weight: 600; }
 #scene3d .hud.bl .col span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #scene3d .hud .seg { font-size: 11px; background: rgba(28, 28, 30, .72); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
 
-#pip { position: absolute; right: 12px; bottom: 24px; z-index: 2; width: min(34%, 260px); aspect-ratio: 1; border-radius: 10px; border: 1px solid rgba(235, 235, 245, .35); box-shadow: 0 8px 30px rgba(0, 0, 0, .55); pointer-events: none; display: none; overflow: hidden; }
+#pip { position: absolute; right: 12px; bottom: 12px; z-index: 2; width: min(24%, 200px); aspect-ratio: 1; border-radius: 10px; border: 1px solid rgba(235, 235, 245, .35); box-shadow: 0 8px 30px rgba(0, 0, 0, .55); pointer-events: none; display: none; overflow: hidden; }
 #pip.on { display: block; }
 #pip .fx { position: absolute; inset: 0; }
 #pip.degraded .fx { -webkit-backdrop-filter: blur(3px) contrast(.75) brightness(1.15); backdrop-filter: blur(3px) contrast(.75) brightness(1.15); background: rgba(210, 210, 215, .12); }
@@ -109,22 +107,24 @@ canvas#map { background: #111113; border-radius: 10px; }
 .l3.refused { border-color: var(--yellow); } .l3.refused i { background: var(--yellow); } .l3.refused span { color: var(--yellow); }
 .l3.zone { border-color: rgba(255, 69, 58, .6); } .l3.zone b { color: var(--red); }
 .l3.hub b { font-weight: 600; }
-.l3.pick { pointer-events: auto; cursor: pointer; }
+.l3.pick { pointer-events: auto; cursor: pointer; opacity: 0; transition: opacity .3s, border-color .3s; }
+#scene3d:hover .l3.pick, .l3.pick.paid, .l3.pick.refused, .l3.pick.sel { opacity: 1; }
 .l3.pick:hover { border-color: rgba(235, 235, 245, .5); }
 .l3.sel { background: var(--label); color: #000; border-color: var(--label); z-index: 99999 !important; }
 .l3.sel span { color: rgba(0, 0, 0, .6); } .l3.sel i { background: var(--blue); }
 #overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--label-2); font-size: 15px; pointer-events: none; }
-#v-mission { grid-template-rows: auto minmax(0, 1fr); }
-#summary { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(4, minmax(0, 1fr)); gap: 12px; }
-#summary > * { background: var(--surface); border-radius: 14px; padding: 12px 16px; min-width: 0; }
+#v-mission { grid-template-columns: minmax(0, 1fr) minmax(340px, 380px); grid-template-rows: minmax(0, 1fr); }
+#summary { position: absolute; z-index: 4; left: 24px; top: 14px; max-width: calc(100% - 48px); display: flex; gap: 1px; border-radius: 12px; overflow: hidden; background: rgba(84, 84, 88, .4); box-shadow: 0 8px 28px rgba(0, 0, 0, .45); }
+#summary > * { background: rgba(28, 28, 30, .8); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); padding: 6px 14px; min-width: 0; }
+#summary .state { max-width: 300px; font-size: 13px; }
 .state { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; }
 .state span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #live { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--label-3); }
 #live.on { background: var(--blue); box-shadow: 0 0 0 4px rgba(10, 132, 255, .25); animation: breathe 2s ease-in-out infinite; }
 #live.done { background: var(--green); }
 @keyframes breathe { 50% { box-shadow: 0 0 0 7px rgba(10, 132, 255, 0); } }
-.tile small { display: block; color: var(--label-2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
-.tile b { display: block; font-size: 28px; font-weight: 600; letter-spacing: -.025em; line-height: 1.15; }
+.tile small { display: block; color: var(--label-2); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.tile b { display: block; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; letter-spacing: -.025em; line-height: 1.15; }
 .tile span { color: var(--label-2); font-size: 11px; }
 #finish { position: absolute; z-index: 5; width: min(440px, calc(100% - 48px)); padding: 26px 26px 20px; border-radius: 20px; text-align: center;
   background: rgba(44, 44, 46, .82); -webkit-backdrop-filter: saturate(180%) blur(30px); backdrop-filter: saturate(180%) blur(30px); border: 1px solid var(--sep); box-shadow: 0 24px 60px rgba(0, 0, 0, .55); animation: rise .45s cubic-bezier(.2, .9, .3, 1.1); }
@@ -142,7 +142,14 @@ canvas#map { background: #111113; border-radius: 10px; }
 .key { display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; }
 .sw { width: 14px; height: 0; display: inline-block; }
 
-#right { display: grid; grid-template-rows: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, .7fr); gap: 12px; min-height: 0; }
+#right { position: relative; }
+#right h2 .seg { font-size: 13px; }
+.cap { margin: 0; padding: 2px 14px 8px; color: var(--label-2); }
+#fieldScroll .ci { display: none; }
+#fieldScroll th:nth-child(2), #fieldScroll td:nth-child(2), #fieldScroll th:nth-child(5), #fieldScroll td:nth-child(5) { display: none; }
+.mapfoot { display: flex; align-items: center; gap: 4px 18px; flex-wrap: wrap; padding: 6px 14px 10px; }
+.mapfoot .legend, .mapfoot .cond { padding: 0; }
+.mapfoot .cond { margin-left: auto; gap: 4px 18px; }
 .scroll { overflow-y: auto; min-height: 0; flex: 1; }
 .scroll::-webkit-scrollbar { width: 6px; }
 .scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .18); border-radius: 3px; }
@@ -160,8 +167,6 @@ canvas#map { background: #111113; border-radius: 10px; }
 .ev.warn .src, .ev.warn b { color: var(--yellow); }
 .ev.bad .src, .ev.bad b { color: var(--red); }
 .ev b { font-weight: 600; }
-#log[data-f="field"] .ev:not([data-r="field"]), #log[data-f="farmer"] .ev:not([data-r="farmer"]),
-#log[data-f="adjuster"] .ev:not([data-r="adjuster"]), #log[data-f="system"] .ev:not([data-r="system"]) { display: none; }
 
 table { width: 100%; border-collapse: collapse; }
 th { position: sticky; top: 0; background: var(--surface); color: var(--label-2); font-weight: 400; text-align: left; padding: 4px 6px 6px; border-bottom: 1px solid var(--sep); }
@@ -177,7 +182,6 @@ tr.focus td { background: rgba(10, 132, 255, .12); }
 .ci i { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: rgba(255, 159, 10, .45); }
 .ci b { position: absolute; top: -4px; bottom: -4px; width: 2px; border-radius: 1px; background: var(--label); }
 
-#logPanel { position: relative; }
 #sheet { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; background: var(--surface); animation: slide .3s cubic-bezier(.2, .9, .3, 1); }
 @keyframes slide { from { opacity: 0; transform: translateX(16px); } }
 .sh { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px 10px; }
@@ -204,18 +208,24 @@ tr.focus td { background: rgba(10, 132, 255, .12); }
 #parcels tr:hover td, .claim:hover { background: rgba(118, 118, 128, .1); }
 tr.sel td { background: rgba(10, 132, 255, .22) !important; }
 .claim.sel { background: rgba(10, 132, 255, .18); }
-#claims { padding: 0 0 8px; }
-.claim { display: grid; grid-template-columns: 44px 1fr auto 120px; gap: 4px 12px; align-items: baseline; padding: 7px 14px; }
-.steps { grid-column: 2 / 5; display: flex; flex-wrap: wrap; gap: 4px; }
-.step { font-size: 11px; padding: 1px 7px; border-radius: 6px; background: var(--fill-2); color: var(--label-2); }
-.step.ok { color: var(--green); } .step.warn { color: var(--yellow); } .step.bad { color: var(--red); }
-.claim + .claim { border-top: 1px solid rgba(84, 84, 88, .3); }
-.claim .id { font: 500 13px var(--sans); color: var(--label-2); }
-.claim .amt { font-weight: 600; }
-.claim .pkt { text-align: right; }
-.pkt.queued { color: #409cff; }
-.pkt.sent { color: var(--label-2); }
+#claims { padding: 2px 14px 12px; display: flex; flex-direction: column; gap: 10px; }
+.claim { padding: 2px 0; border-radius: 12px; }
+.claim .to { display: flex; gap: 6px; align-items: baseline; color: var(--label-2); font-size: 11px; margin: 0 0 4px 4px; }
+.claim .to b { color: var(--label); font-size: 13px; font-weight: 600; }
+.claim .to time { margin-left: auto; color: var(--label-3); }
+.bubble { max-width: 92%; padding: 8px 12px; border-radius: 18px 18px 18px 6px; background: var(--surface-2); font-size: 14px; line-height: 1.35; transform-origin: 0 100%; }
+.bubble em { font-style: normal; font-weight: 700; color: var(--green); }
+.bubble small { display: block; margin-top: 3px; color: var(--label-2); font-size: 12px; }
+.claim.new .bubble { animation: pop .5s cubic-bezier(.2, 1.3, .4, 1); }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.9); } }
+.proof { display: flex; flex-wrap: wrap; gap: 4px 10px; margin: 5px 0 0 4px; font-size: 11px; color: var(--label-3); }
+.proof .ok { color: var(--green); } .proof .bad { color: var(--red); } .proof .wait { color: #409cff; }
+.note-line { font-size: 12px; color: var(--label-2); padding-left: 4px; cursor: pointer; }
+.note-line b { color: var(--label); font-weight: 600; }
+.note-line.warn::before, .note-line.bad::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; background: var(--yellow); }
+.note-line.bad::before { background: var(--red); }
 .empty, #log:empty::before, table:has(#parcels:empty)::after { display: block; padding: 18px 16px; color: var(--label-2); max-width: 420px; }
+#claims .empty { padding: 16px 0; }
 .empty b { display: block; color: var(--label); font-weight: 600; margin-bottom: 2px; }
 #log:empty::before { content: "Each decision the drone and agents make shows up here as the mission runs."; }
 table:has(#parcels:empty)::after { content: "Every insured field appears here, ranked by how much payout money is still uncertain."; }
@@ -261,14 +271,14 @@ canvas#dmap { background: #111113; border-radius: 10px; }
 #v-evals .hero b { display: block; font-size: 40px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; margin: 4px 0; }
 #v-evals .hero span { color: var(--label-2); }
 .kv small { font-size: 11px; }
-@media (max-width: 1100px) { #v-evals { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { #v-evals { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { #v-evals { grid-template-columns: 1fr; } }
 .banner { grid-column: 1 / -1; padding: 10px 14px; border-radius: 12px; background: var(--fill-2); color: var(--label-2); }
 .banner b { color: var(--label); font-weight: 600; }
-.big { font-size: 28px; font-weight: 600; letter-spacing: -.02em; padding: 0 14px; }
 @media (max-width: 1100px) {
   body { height: auto; overflow: auto; }
   main { grid-template-columns: 1fr; }
-  #right { grid-template-rows: 420px 360px 260px; }
+  #right { height: 520px; }
   #mapWrap { height: 70vh; }
 }
 </style>
@@ -276,56 +286,45 @@ canvas#dmap { background: #111113; border-radius: 10px; }
 <body>
 <header>
   <div class="brand">Kipimo</div>
-  <nav class="seg" id="view" aria-label="Screens"><button class="active" data-v="mission">Mission</button><button data-v="district">District</button><button data-v="evals">Evals</button></nav>
   <div id="mctl">
   <div class="mid">
-    <div class="group"><label for="scenario">Scenario</label><select id="scenario"></select></div>
-    <div class="group">
-      <label for="policy">Pilot</label>
-      <select id="policy">
-        <option value="agents">AI agents: field, farmer, adjuster</option>
-        <option value="agent">AI agent</option>
-        <option value="infogain">Planner</option>
-        <option value="lawnmower">Lawnmower</option>
-      </select>
-    </div>
-    <div class="group">
-      <button class="btn primary" id="start">Start</button>
-      <button class="btn" id="pause">Pause</button>
-      <input type="range" id="speed" min="1" max="20" step="1" value="10" aria-label="Simulation speed">
-      <span id="speedv" class="muted" style="width: 28px">10×</span>
-    </div>
+    <select id="scenario" aria-label="Scenario"></select>
+    <select id="policy" aria-label="Pilot">
+      <option value="agents">AI agents: field, farmer, adjuster</option>
+      <option value="infogain">Planner</option>
+      <option value="lawnmower">Lawnmower</option>
+    </select>
+    <button class="btn primary" id="start">Start</button>
+    <input type="range" id="speed" min="1" max="20" step="1" value="10" aria-label="Simulation speed">
+    <span id="speedv" class="muted" style="width: 28px">10×</span>
+  </div>
   </div>
   <div class="tools">
-    <button class="btn" id="faultsBtn" popovertarget="faults">Faults</button>
-    <button class="btn" id="diagBtn" aria-pressed="false">Diagnostics</button>
+    <button class="btn" id="back" hidden>Back to mission</button>
+    <button class="btn" id="moreBtn" popovertarget="more" aria-label="More">More</button>
   </div>
-  <div id="faults" popover>
-    <h3>Inject a fault</h3>
-    <p>See how the mission copes.</p>
-    <label>Radio link</label>
-    <div class="seg" id="link" role="group" aria-label="Radio link">
-      <button data-v="online" class="active">Online</button>
-      <button data-v="degraded">Weak</button>
-      <button data-v="offline">Offline</button>
+  <div id="more" popover>
+    <label>Screen</label>
+    <nav class="seg" id="view" aria-label="Screens"><button class="active" data-v="mission">Mission</button><button data-v="district">District</button><button data-v="evals">Evals</button></nav>
+    <div id="faultCtl">
+      <label>Radio link</label>
+      <div class="seg" id="link" role="group" aria-label="Radio link">
+        <button data-v="online" class="active">Online</button>
+        <button data-v="degraded">Weak</button>
+        <button data-v="offline">Offline</button>
+      </div>
+      <label>Camera</label>
+      <button class="btn" id="degrade">Blur the camera</button>
     </div>
-    <label>Camera</label>
-    <button class="btn" id="degrade">Blur the camera</button>
-  </div>
+    <label>Engineering</label>
+    <button class="btn" id="diagBtn" aria-pressed="false">Show diagnostics</button>
   </div>
 </header>
 
 <div class="views" style="display: contents" role="main">
 <main id="v-mission">
-  <section id="summary" aria-live="polite">
-    <div class="state"><i id="live"></i><span id="status">Ready</span></div>
-    <div class="tile"><small>Farmers paid</small><b id="hPaid">0</b><span id="hPaidSub"></span></div>
-    <div class="tile"><small>Paid out</small><b id="hAmount">KES 0</b><span id="hSent"></span></div>
-    <div class="tile"><small>First payout</small><b id="hFirst">-</b><span>after launch, simulated</span></div>
-    <div class="tile"><small>Flown</small><b id="hDist">0.0 km</b><span id="hBatt"></span></div>
-  </section>
   <section class="panel">
-    <h2>Map
+    <h2>
       <span class="seg" id="layers" role="group" aria-label="Map layer">
         <button class="active" data-l="belief">Crop loss</button>
         <button data-l="voi">Where to look</button>
@@ -334,19 +333,24 @@ canvas#dmap { background: #111113; border-radius: 10px; }
       <span class="seg" id="viewMode" role="group" aria-label="Map view"><button class="active" data-v="top">Top</button><button data-v="3d">3D</button></span>
       <span class="note" id="mapNote"></span>
     </h2>
-    <div class="cond" id="cond"></div>
     <div id="mapWrap">
+      <section id="summary" aria-live="polite">
+        <div class="state"><i id="live"></i><span id="status">Ready</span></div>
+        <div class="tile"><small>Farmers paid</small><b id="hPaid">0</b></div>
+        <div class="tile"><small>Paid out</small><b id="hAmount">KES 0</b></div>
+        <div class="tile" title="Simulated minutes after launch"><small>First payout</small><b id="hFirst">-</b></div>
+        <div class="tile"><small>Flown</small><b id="hDist">0.0 km</b></div>
+      </section>
       <canvas id="map" role="img" aria-label="Map of the fields, the drone's path and crop loss. Click a field for details."></canvas>
       <div id="scene3d">
         <div id="labels3d"></div>
-        <div class="hud tl"><b id="s3site"></b><span><span id="s3ex">Heights ×3</span>, drone enlarged</span></div>
         <div class="hud tr">
           <span class="seg" id="camMode" role="group" aria-label="Camera"><button class="active" data-c="orbit">Orbit</button><button data-c="follow">Follow</button><button data-c="top">Top</button></span>
           <span class="seg" id="groundMode" role="group" aria-label="Ground"><button class="active" data-g="1,0">Satellite</button><button data-g="0,0">Illustrated</button><button data-g="-1,0.85">Loss map</button></span>
           <span class="seg" id="exag" role="group" aria-label="Height exaggeration"><button data-e="1">1×</button><button class="active" data-e="3">3×</button><button data-e="6">6×</button></span>
         </div>
         <div id="pip"><div class="fx"></div><i class="cross"></i><span class="rec">Drone camera</span><span class="meta" id="pipMeta"></span></div>
-        <div class="hud bl"><i id="compass">N</i><span class="col"><span id="hint">Drag to turn, right-drag to move, scroll to zoom</span><span id="credit">Imagery: Sentinel-2 cloudless 2016 by EOX, contains modified Copernicus Sentinel data, CC BY 4.0</span></span></div>
+        <div class="hud bl"><i id="compass">N</i><span class="col"><b id="s3site"></b><span id="hint">Drag to turn, right-drag to move, scroll to zoom</span><span><span id="s3ex">Heights ×3</span>, drone enlarged. <span id="credit">Imagery: Sentinel-2 cloudless 2016 by EOX, contains modified Copernicus Sentinel data, CC BY 4.0</span></span></span></div>
       </div>
       <div id="finish" hidden role="dialog" aria-labelledby="finTitle">
         <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="22" fill="#30d158"/><path d="M13 22.5l6 6 12-13" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -357,35 +361,24 @@ canvas#dmap { background: #111113; border-radius: 10px; }
       </div>
       <div id="overlay">Choose a scenario and pilot, then press Start.</div>
     </div>
-    <div class="legend" id="legend"></div>
+    <div class="mapfoot"><div class="legend" id="legend"></div><div class="cond" id="cond"></div></div>
   </section>
 
-  <section id="right">
-    <div class="panel" id="logPanel">
-      <aside id="sheet" hidden aria-label="Parcel details">
-        <div class="sh"><div><h3 id="shTitle"></h3><span id="shSub"></span></div><span id="shPill"></span><button id="shClose" aria-label="Close details">✕</button></div>
-        <div class="scroll" id="shBody"></div>
-      </aside>
-      <h2>Log
-        <span class="seg" id="logf" role="group" aria-label="Filter the log">
-          <button class="active" data-f="all">All</button><button data-f="field">Field</button><button data-f="farmer">Farmer</button><button data-f="adjuster">Adjuster</button><button data-f="system">System</button>
-        </span>
-      </h2>
-      <div class="scroll" id="traceScroll"><div id="log"></div></div>
+  <section class="panel" id="right">
+    <aside id="sheet" hidden aria-label="Parcel details">
+      <div class="sh"><div><h3 id="shTitle"></h3><span id="shSub"></span></div><span id="shPill"></span><button id="shClose" aria-label="Close details">✕</button></div>
+      <div class="scroll" id="shBody"></div>
+    </aside>
+    <h2><span class="seg" id="tabs" role="tablist" aria-label="Side panel"><button class="active" data-t="phones">Phones</button><button data-t="fields">Fields</button><button data-t="log">Log</button></span><span class="note" id="claimNote"></span></h2>
+    <div class="scroll" id="claimScroll" data-t="phones"><div id="claims" role="log" aria-live="polite"></div></div>
+    <div class="scroll" id="fieldScroll" data-t="fields" hidden>
+      <p class="cap">Most money in doubt first. Pays at <span id="gateV">80%</span> confidence.</p>
+      <table>
+        <thead><tr><th>Field</th><th>Farmer</th><th>Crop loss</th><th>Confidence</th><th class="num">In doubt</th><th class="num">Payout</th><th>Status</th></tr></thead>
+        <tbody id="parcels"></tbody>
+      </table>
     </div>
-    <div class="panel">
-      <h2>Parcels <span class="note">most money in doubt first, pays at <span id="gateV">80%</span> confidence</span></h2>
-      <div class="scroll">
-        <table>
-          <thead><tr><th>Parcel</th><th>Farmer</th><th>Crop loss</th><th>Confidence</th><th class="num">In doubt</th><th class="num">Payout</th><th>Status</th></tr></thead>
-          <tbody id="parcels"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="panel">
-      <h2>Claims <span class="note" id="claimNote"></span></h2>
-      <div class="scroll" id="claims" role="list"></div>
-    </div>
+    <div class="scroll" id="traceScroll" data-t="log" hidden><div id="log"></div></div>
   </section>
 </main>
 
@@ -446,7 +439,7 @@ function fresh() {
     lanes: [], focus: new Set(), claims: new Map(), refused: new Map(), cases: new Map(), paidTotal: 0,
     uplink: { state: "online", depth: 0, bytes: 0, settled: 0, pkt: 0 },
     perception: null, sensorDegraded: false, events: 0, head: "", t: 0, policy: "", gate: 0.8,
-    sortieStart: 0, done: false, first: null,
+    sortieStart: 0, done: false, first: null, thread: [], lang: {},
   };
 }
 fresh();
@@ -492,7 +485,7 @@ function resize() {
   cv.style.width = size + "px"; cv.style.height = size + "px";
   pmapCanvas = null; dirty = true;
 }
-window.addEventListener("resize", resize);
+new ResizeObserver(resize).observe($("mapWrap")); // the legend, footer and panels move it, not only the window
 
 let edgeCache = { pm: null, data: null };
 function fieldEdges() {
@@ -644,7 +637,7 @@ function legend() {
     <span class="key"><i class="sw" style="border-top: 2px solid ${YELLOW}"></i>look again</span>`;
   if (layer === "voi") {
     $("legend").innerHTML = `Payout money a photo could change: low <span class="ramp" style="background:${grad(voiColor)}"></span> high ${keys}`;
-    $("mapNote").textContent = "Bright where the drone should look next";
+    $("mapNote").textContent = S.done ? "Money a photo could still change" : "Bright where to look next";
   } else {
     $("legend").innerHTML = `Crop loss: 0% <span class="ramp" style="background:${grad(lossColor)}"></span> 100% ${keys}`;
     $("mapNote").textContent = layer === "truth" ? "Simulator only. The drone never sees this" : "Faded where the drone hasn't looked yet";
@@ -699,21 +692,18 @@ function renderSheet() {
 }
 
 // ---------- log ----------
-const ROLE = { agent: "field", planner: "field", envelope: "field", drone: "field", belief: "field", priors: "field", flight: "field", weather: "field",
-  farmer: "farmer", "sms in": "farmer", "sms out": "farmer", adjuster: "adjuster", payout: "adjuster" };
 function log(cls, src, html, t) {
   const el = document.createElement("div");
   el.className = "ev " + cls;
-  el.dataset.r = ROLE[src] || "system";
   el.innerHTML = `<span class="t">${clock(t ?? S.t)}</span><span class="src">${src}</span><span class="msg">${html}</span>`;
   const box = $("traceScroll"), stick = box.scrollTop + box.clientHeight >= box.scrollHeight - 30;
   $("log").appendChild(el);
   if (stick) box.scrollTop = box.scrollHeight;
 }
 function toolSummary(name, inp) {
-  if (name === "survey") return `<span class="fn">survey</span>${inp.parcel_ids.join(", ")} to ${(+inp.target_confidence).toFixed(2)}, max ${Math.round(inp.max_distance_m)} m<span class="why">${esc(inp.reason)}</span>`;
-  if (name === "issue_claim") return `<span class="fn">issue_claim</span>${inp.parcel_id}<span class="why">${esc(inp.justification)}</span>`;
-  if (name === "score_payout" || name === "get_priors") return `<span class="fn">${name}</span>${inp.parcel_id}`;
+  if (name === "survey") return `<span class="fn">survey</span>${[].concat(inp.parcel_ids ?? []).map(esc).join(", ")} to ${(+inp.target_confidence).toFixed(2)}, max ${Math.round(inp.max_distance_m)} m<span class="why">${esc(inp.reason)}</span>`;
+  if (name === "issue_claim") return `<span class="fn">issue_claim</span>${esc(inp.parcel_id)}<span class="why">${esc(inp.justification)}</span>`;
+  if (name === "score_payout" || name === "get_priors") return `<span class="fn">${name}</span>${esc(inp.parcel_id)}`;
   return `<span class="fn">${esc(name)}</span>`;
 }
 function status(text) { $("status").textContent = text || "Ready"; }
@@ -725,8 +715,10 @@ function onEvent(ev) {
   if (ev.hash) { S.events = ev.seq + 1; S.head = ev.hash; }
   switch (ev.kind) {
     case "HELLO": hello(d); return;
+    case "SESSION_ERROR": status(`Run stopped: ${d.error}`); return;
+    case "COMMAND_ERROR": status(`Not done: ${ev.data}`); return;
     case "SESSION_RESET":
-      fresh(); $("finish").hidden = true; $("log").innerHTML = ""; renderClaims(); S.policy = d.policy; $("overlay").style.display = "none";
+      fresh(); $("finish").hidden = true; $("log").innerHTML = ""; paused = false; armed = false; unseen = 0; badge(); renderClaims(); S.policy = d.policy; $("overlay").style.display = "none";
       if (d.replay) log("", "replay", `${esc(words(d.replay))}, recorded run`);
       break;
     case "EPISODE_START": S.policy = d.policy; break;
@@ -765,7 +757,7 @@ function onEvent(ev) {
     case "AGENT_BUDGET_EXHAUSTED": log("warn", "agent", `${d.tool_calls} tool calls used, planner takes over`); break;
     case "AGENT_FALLBACK": log("warn", who(d), `model unavailable (${esc(words(d.reason))}), rules take over`); if (!d.role || d.role === "field" || d.role === "all") status("Model unavailable, rules flying"); break;
     case "AGENT_REPORT": log("agent", "agent", esc(d.summary)); break;
-    case "SMS_RECEIVED": log("", "sms in", `${d.parcel} (${d.lang}): <i>${esc(d.text)}</i>`); break;
+    case "SMS_RECEIVED": S.lang[d.parcel] = d.lang; log("", "sms in", `${d.parcel} (${d.lang}): <i>${esc(d.text)}</i>`); break;
     case "FARMER_REPORT": log(d.suspicious ? "bad" : d.conflict ? "warn" : "", "farmer", `${d.parcel} reports <b>${d.severity}</b>${d.where && d.where !== "unknown" ? ", " + words(d.where) : ""}${d.suspicious ? ", flagged suspicious" : ""}${d.discounted ? ", discounted: record of overstating" : d.doubted ? ", conflicts with estimate: flagged for a look" : ""}`); break;
     case "FLIGHT_SET": log("", "flight", `${d.altitude_m} m, ${d.speed_mps} m/s, camera ${d.quality.toFixed(2)}<span class="why">${esc(d.reason)}</span>`); break;
     case "WAITED": log("warn", "weather", `holding ${d.minutes} min at the pad${d.wind != null ? `, wind ${d.wind} m/s` : ""}<span class="why">${esc(d.reason)}</span>`); status(d.wind != null ? `Holding at the pad for the flight window, wind ${d.wind} m/s` : "Holding at the pad"); break;
@@ -786,12 +778,13 @@ function onEvent(ev) {
       break;
     }
     case "CLAIM_ISSUED": {
-      const c = d.claim; S.first ??= S.t; S.claims.set(c.parcel_id, { ...c, status: "queued", bytes: null }); S.paidTotal += c.amount;
+      const c = d.claim; S.first ??= S.t; S.claims.set(c.parcel_id, { ...c, pubkey: d.pubkey, status: "queued", bytes: null, verified: null, fresh: true }); S.paidTotal += c.amount;
+      S.thread.push({ pid: c.parcel_id, sms: true }); if (tab !== "phones") { unseen++; badge(); }
       step(c.parcel_id, "claim signed", "ok");
       log("ok", "payout", `Paid ${esc(c.holder)} <b>${fmtKES(c.amount)}</b> for ${c.parcel_id}, ${Math.round(c.tier * 100)}% tier, ${Math.round(c.confidence * 100)}% sure`);
       renderClaims(); break;
     }
-    case "UPLINK_QUEUED": { const c = claimById(d.claim_id); if (c) { c.bytes = d.bytes; c.status = "queued"; } S.uplink.depth = d.depth; S.uplink.pkt = Math.max(S.uplink.pkt, d.bytes); renderClaims(); break; }
+    case "UPLINK_QUEUED": { const c = claimById(d.claim_id); if (c) { c.bytes = d.bytes; c.status = "queued"; check(c, d.packet); } S.uplink.depth = d.depth; S.uplink.pkt = Math.max(S.uplink.pkt, d.bytes); renderClaims(); break; }
     case "UPLINK_SENT": { const c = claimById(d.claim_id); if (c) c.status = "sent"; S.uplink.depth = d.depth; S.uplink.bytes = d.total_bytes; S.uplink.settled++; renderClaims(); break; }
     case "LINK_STATE":
       S.uplink.state = d.state; S.uplink.depth = d.depth; setLinkButtons(d.state);
@@ -804,13 +797,16 @@ function onEvent(ev) {
       log(d.degraded ? "warn" : "", "camera", d.degraded ? "<b>blurred</b>, image quality 30%" : "restored");
       break;
     case "DEGRADED_SENSOR_REPLAN": log("warn", "planner", `Replanned for ${Math.round(d.quality * 100)}% image quality`); break;
+    case "FLOOD_ALERT": log("warn", "flood hub", `${esc(d.gauge)} passes danger level ${d.danger_m} m at ${String(d.local_hour).padStart(2, "0")}:00, ${d.lead_h} h ahead. No farmer had to call`); break;
+    case "FLOOD_WATCH": log("", "flood hub", `${esc(d.gauge)} peaks at ${d.peak_m} m, below danger ${d.danger_m} m. No flight`); break;
+    case "FLIGHT_BOOKED": log("", "dispatch", d.in_h ? `Flight booked for the first calm window, in ${d.in_h} h` : "Flight booked: the drone leaves the hub now"); break;
     case "RETURN_TO_HOME": log("warn", "planner", `Returning home: ${esc(reason(d.reason))}`); break;
     case "EPISODE_END":
       if (!SITE) loadRecordings();
       S.done = true; S.focus = new Set(); S.lanes = []; S.activeLane = null;
       log("ok", "mission", `Complete: ${(d.distance_m / 1000).toFixed(1)} km, ${d.claims} paid, payout error ${d.payout_mae_pct.toFixed(2)}% of sum insured`);
       status(`Mission complete. ${d.claims} farmers paid`);
-      finish(d);
+      finish(d); legend();
       break;
   }
   dirty = true;
@@ -831,7 +827,31 @@ function step(pid, text, tone) {
   S.cases.delete(pid);
   c.steps.push({ text, tone });
   S.cases.set(pid, c);
+  if (tone === "warn" || tone === "bad") S.thread.push({ pid, text, tone });
   renderClaims();
+}
+// The browser checks each claim packet itself: ed25519 over the exact CBOR body, as the insurer does.
+const hexU8 = (h) => Uint8Array.from(h.match(/../g) || [], (x) => parseInt(x, 16));
+async function check(c, hex) {
+  try {
+    const u = hexU8(hex), long = u[1] === 0x58, at = long ? 3 : 2, n = long ? u[2] : u[1] - 0x40, end = at + n;
+    if (u[0] !== 0x82 || u[end] !== 0x58 || u[end + 1] !== 0x40) throw new Error("not a claim packet");
+    const key = await crypto.subtle.importKey("raw", hexU8(c.pubkey), { name: "Ed25519" }, false, ["verify"]);
+    c.verified = await crypto.subtle.verify({ name: "Ed25519" }, key, u.slice(end + 2, end + 66), u.slice(at, end));
+  } catch { c.verified = "n/a"; } // no Ed25519 in this browser
+  renderClaims();
+}
+const SMS = {
+  sw: (n, a, p) => `Habari ${n}. Dai lako la <em>${a}</em> kwa shamba ${p} limeidhinishwa.`,
+  en: (n, a, p) => `Hello ${n}. Your claim of <em>${a}</em> for field ${p} is approved.`,
+};
+let shownAmount = 0;
+function countUp() {
+  const from = shownAmount, to = S.paidTotal, t0 = performance.now();
+  shownAmount = to;
+  if (calm || to <= from) { $("hAmount").textContent = fmtKES(to); return; }
+  const f = (now) => { const k = Math.min(1, (now - t0) / 700), e = 1 - (1 - k) ** 3; $("hAmount").textContent = fmtKES(from + (to - from) * e); if (k < 1) requestAnimationFrame(f); };
+  requestAnimationFrame(f);
 }
 function claimById(id) { for (const c of S.claims.values()) if (c.claim_id === id) return c; return null; }
 function toolResult(d) {
@@ -865,7 +885,7 @@ function conditions(c) {
   const w = c.weather, f = c.flight, cam = c.camera;
   const cls = (v, warn, bad) => (v >= bad ? "bad" : v >= warn ? "warn" : "");
   const tone = { "": "var(--label)", warn: "var(--yellow)", bad: "var(--red)" };
-  let wind = '<span>Forecast<b>none loaded</b></span>';
+  let wind = "";
   if (w) {
     const k = cls(w.wind_mps / w.limit_mps, 0.8, 1);
     const bars = w.calm_share_next_hours.map((p) => `<i style="height:${Math.max(2, p * 14)}px;background:${p >= 0.95 ? "var(--label)" : "var(--label-3)"}"></i>`).join("");
@@ -874,7 +894,7 @@ function conditions(c) {
       <span>Forecast<span class="spark">${bars}</span><b>${when}</b></span>`;
   }
   const compass = (deg) => ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][Math.round(deg / 45) % 8];
-  const air = c.wind_at_drone ? `<span>Wind at drone<b>${c.wind_at_drone.mps.toFixed(1)} m/s ${compass(c.wind_at_drone.from_deg)}</b></span><span>Motors<b>${f.power_w} W</b></span>` : "";
+  const air = c.wind_at_drone ? `<span>Wind at drone<b>${c.wind_at_drone.mps.toFixed(1)} m/s ${compass(c.wind_at_drone.from_deg)}</b></span>`: "";
   $("cond").innerHTML = `${wind}${air}<span>Flying<b>${f.altitude_m} m up, ${f.speed_mps} m/s</b></span>
     <span>Image quality<b class="${cam.degraded ? "warn" : ""}">${Math.round(cam.quality * 100)}%${cam.degraded ? ", blurred" : ""}</b></span>`;
 }
@@ -895,22 +915,27 @@ function renderParcels() {
   }).join("");
 }
 function renderClaims() {
-  const rows = [...S.cases.entries()].reverse();
   const sent = [...S.claims.values()].filter((c) => c.status === "sent").length;
-  $("claimNote").textContent = S.claims.size ? `${S.claims.size} signed, ${sent} delivered` : rows.length ? `${rows.length} open` : "";
-  $("claims").innerHTML = rows.length ? rows.map(([pid, k]) => {
-    const c = S.claims.get(pid), held = k.steps.at(-1).tone === "bad";
-    const state = c ? `<span class="pkt ${c.status}">${c.status === "sent" ? "Delivered" : "Waiting for signal"}</span>` : `<span class="pkt ${held ? "" : "queued"}">${held ? "With a person" : "In review"}</span>`;
-    const name = S.world ? S.world.parcels.find((p) => p.id === pid)?.holder || "" : "";
-    return `<div class="claim${pid === sel ? " sel" : ""}" data-id="${pid}" role="listitem" tabindex="0"><span class="id">${pid}</span><span>${esc(name)}</span>
-      <span class="amt">${c ? fmtKES(c.amount) : ""}</span>${state}
-      <div class="steps">${k.steps.map((x) => `<span class="step ${x.tone}">${x.text}</span>`).join("")}</div></div>`;
-  }).join("") : '<div class="empty"><b>No claims yet</b>A claim appears here once it is signed, and again when the farmer\'s SMS is delivered.</div>';
+  const holder = (pid) => (S.world ? S.world.parcels.find((p) => p.id === pid)?.holder || "" : "");
+  $("claimNote").textContent = S.claims.size ? `${S.claims.size} paid, ${sent} delivered` : "";
+  const box = $("claimScroll"), stick = box.scrollTop + box.clientHeight >= box.scrollHeight - 30;
+  $("claims").innerHTML = S.thread.length ? S.thread.map((m) => {
+    const name = holder(m.pid);
+    if (!m.sms) return `<div class="note-line ${m.tone}" data-id="${m.pid}"><b>${m.pid}</b> ${esc(name)}: ${esc(m.text)}</div>`;
+    const c = S.claims.get(m.pid), first = esc(name.split(" ")[0]), amt = fmtKES(c.amount), sw = S.lang[m.pid] !== "en";
+    const sig = c.verified === true ? '<span class="ok">✓ Signature verified in this browser</span>' : c.verified === false ? '<span class="bad">✕ Signature does not match</span>' : c.verified === "n/a" ? "<span>Signed ed25519</span>" : "<span>Checking signature…</span>";
+    const del = c.status === "sent" ? '<span class="ok">Delivered</span>' : '<span class="wait">Waiting for signal</span>';
+    const html = `<div class="claim${c.fresh ? " new" : ""}${m.pid === sel ? " sel" : ""}" data-id="${m.pid}" tabindex="0">
+      <div class="to"><b>${esc(name)}</b> ${m.pid} · ${c.crop}<time>${clock(c.t)}</time></div>
+      <div class="bubble">${sw ? SMS.sw(first, amt, m.pid) + `<small>${SMS.en(first, amt, m.pid).replace(/<\/?em>/g, "")}</small>` : SMS.en(first, amt, m.pid)}</div>
+      <div class="proof">${sig}${c.bytes ? `<span>${c.bytes} bytes, fits one SMS</span>` : ""}<span>rule ${c.trigger_id}, ${Math.round(c.tier * 100)}% tier</span>${del}</div></div>`;
+    c.fresh = false;
+    return html;
+  }).join("") : '<div class="empty"><b>No payments yet</b>When a claim is signed, the farmer\'s text appears here, with its signature checked by this browser.</div>';
+  if (stick) box.scrollTop = box.scrollHeight;
   renderSheet();
   $("hPaid").textContent = S.claims.size;
-  $("hPaidSub").textContent = S.world ? `of ${S.world.parcels.length} parcels` : "";
-  $("hAmount").textContent = fmtKES(S.paidTotal);
-  $("hSent").textContent = S.claims.size ? `${sent} delivered by SMS` : "";
+  if (shownAmount !== S.paidTotal) countUp();
 }
 function footer() {
   const b = S.battery, b0 = S.battery0 || 1;
@@ -919,7 +944,6 @@ function footer() {
   $("fBattBar").style.background = b != null && b / b0 < 0.25 ? "var(--red)" : b != null && b / b0 < 0.5 ? "var(--yellow)" : "var(--green)";
   $("fDist").textContent = (S.distance / 1000).toFixed(2) + " km";
   $("hDist").textContent = (S.distance / 1000).toFixed(1) + " km";
-  $("hBatt").textContent = b == null ? "" : `battery ${Math.round((100 * b) / b0)}%`;
   $("hFirst").textContent = S.first == null ? "-" : Math.max(1, Math.round(S.first / 60)) + " min";
   $("live").className = S.done ? "done" : S.world ? "on" : "";
   $("fSortie").textContent = S.world && S.policy === "agent" ? `sortie cap ${(S.world.sortie_m / 1000).toFixed(1)} km` : "";
@@ -968,53 +992,64 @@ setInterval(() => {  // same pacing as the server's replay: sim time at speed, l
 function setLinkButtons(state) { for (const b of $("link").children) b.classList.toggle("active", b.dataset.v === state); }
 function hello(d) {
   const pol = $("policy");
-  pol.querySelector('[value="agent"]').textContent = d.agent_available ? "AI agent" : "AI agent (no API key)";
-  if (!d.running && !S.world) pol.value = d.agent_available ? "agent" : "infogain";
+  pol.querySelector('[value="agents"]').textContent = `AI agents: field, farmer, adjuster${d.agent_available ? "" : " (needs a Gemini key)"}`;
+  if (!d.running && !S.world) pol.value = d.agent_available ? "agents" : "infogain";
   $("speed").value = d.speed; $("speedv").textContent = d.speed + "×";
   const has = (sel, v) => [...$(sel).options].some((o) => o.value === v);
   if (has("scenario", d.scenario)) $("scenario").value = d.scenario;
   if (d.running && has("policy", d.policy)) pol.value = d.policy;
   if (d.running || S.world) $("overlay").style.display = "none";
 }
-$("start").onclick = () => send({ cmd: "start", scenario: $("scenario").value, policy: $("policy").value });
-let paused = false;
-$("pause").onclick = () => { paused = !paused; send({ cmd: "pause", on: paused }); $("pause").textContent = paused ? "Resume" : "Pause"; $("pause").classList.toggle("on", paused); };
+// One button: Start, then Pause and Resume while a run is live. Changing the scenario or pilot arms a fresh Start.
+let paused = false, armed = false;
+const live = () => !!S.world && !S.done && !armed;
+function togglePause() { if (!live()) return; paused = !paused; send({ cmd: "pause", on: paused }); }
+$("start").onclick = () => {
+  if (live()) return togglePause();
+  paused = armed = false;
+  send({ cmd: "start", scenario: $("scenario").value, policy: $("policy").value });
+};
+for (const id of ["scenario", "policy"]) $(id).addEventListener("change", () => (armed = !!S.world && !S.done));
+function startLabel() { const b = $("start"); b.textContent = !live() ? "Start" : paused ? "Resume" : "Pause"; b.classList.toggle("primary", !live() || paused); }
 $("speed").oninput = (e) => { $("speedv").textContent = e.target.value + "×"; send({ cmd: "speed", value: +e.target.value }); };
 for (const b of $("link").children) b.onclick = () => send({ cmd: "link", state: b.dataset.v });
 $("degrade").onclick = () => send({ cmd: "degrade", on: !S.sensorDegraded });
-$("faults").addEventListener("beforetoggle", (e) => {
+$("more").addEventListener("beforetoggle", (e) => {
   if (e.newState !== "open") return;
-  const r = $("faultsBtn").getBoundingClientRect();
-  Object.assign($("faults").style, { top: r.bottom + 8 + "px", left: Math.max(12, r.right - 280) + "px" });
+  const r = $("moreBtn").getBoundingClientRect();
+  Object.assign($("more").style, { top: r.bottom + 8 + "px", left: Math.max(12, r.right - 280) + "px" });
 });
-const faulty = () => $("faultsBtn").classList.toggle("dot", S.sensorDegraded || S.uplink.state !== "online");
+const faulty = () => { $("moreBtn").classList.toggle("dot", S.sensorDegraded || S.uplink.state !== "online"); startLabel(); };
 const store = (k, v) => { try { return v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); } catch { return null; } };
 let diagOn = store("kipimo.diag") === "1";
 function diag(on) {
   diagOn = on; store("kipimo.diag", on ? "1" : "0");
-  $("diag").hidden = !on || view !== "mission"; $("diagBtn").setAttribute("aria-pressed", on); $("diagBtn").classList.toggle("on", on);
+  $("diag").hidden = !on || view !== "mission"; $("diagBtn").setAttribute("aria-pressed", on); $("diagBtn").textContent = on ? "Hide diagnostics" : "Show diagnostics";
   resize();
 }
 $("diagBtn").onclick = () => diag(!diagOn);
-for (const c of $("logf").children) c.onclick = () => { $("log").dataset.f = c.dataset.f; for (const x of $("logf").children) x.classList.toggle("active", x === c); };
 for (const c of $("layers").children) c.onclick = () => { layer = c.dataset.l; for (const x of $("layers").children) x.classList.toggle("active", x === c); legend(); dirty = true; };
 document.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
   if (e.key === "1" || e.key === "2" || e.key === "3") $("layers").children[+e.key - 1].click();
-  if (e.key === " " && !e.target.closest("button, [data-id]")) { e.preventDefault(); $("pause").click(); }
-  if (e.key === "Escape" && sel) select(null);
+  if (e.key === " " && !e.target.closest("button, [data-id]")) { e.preventDefault(); togglePause(); }
+  if (e.key === "Escape" && sel && !document.querySelector(":popover-open")) select(null); // one thing per press
 });
 
 let batch = [];
-setInterval(() => { if (batch.length) { const b = batch; batch = []; for (const ev of b) onEvent(ev); } }, 50);
+setInterval(() => {
+  if (!batch.length) return;
+  const b = batch; batch = [];
+  for (const ev of b) try { onEvent(ev); } catch (e) { console.error(ev.kind, e); } // one bad event never drops the rest
+}, 50);
 function connect() {
   ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
   ws.onopen = () => { batch = []; fresh(); $("log").innerHTML = ""; $("cond").innerHTML = ""; renderClaims(); $("parcels").innerHTML = ""; status(""); dirty = true; };
-  ws.onmessage = (m) => { batch.push(JSON.parse(m.data)); };
+  ws.onmessage = (m) => { try { batch.push(JSON.parse(m.data)); } catch (e) { console.error(e); } };
   ws.onclose = () => setTimeout(connect, 1000);
 }
 if (SITE) {
-  for (const el of [$("scenario").parentElement, $("faultsBtn")]) el.hidden = true;
+  for (const el of [$("scenario"), $("faultCtl")]) el.hidden = true;
   $("policy").innerHTML = "";
   $("overlay").textContent = "Loading a recorded run…";
 } else fetch("/api/scenarios").then((r) => r.json()).then((list) => {
@@ -1022,11 +1057,13 @@ if (SITE) {
 }).finally(connect);
 function loadRecordings() {
   return fetch(api("recordings")).then((r) => r.json()).then((list) => {
+    const keep = $("policy").value;
     $("policy").querySelector("optgroup")?.remove();
     if (!list.length) return;
     const g = document.createElement("optgroup"); g.label = "Replay";
     g.innerHTML = list.map((r) => `<option value="replay:${esc(r.name)}">${esc(r.label)}</option>`).join("");
     $("policy").appendChild(g);
+    if ([...$("policy").options].some((o) => o.value === keep)) $("policy").value = keep;
   });
 }
 loadRecordings().then(() => SITE && $("start").click());
@@ -1046,13 +1083,27 @@ function show(v) {
   view = v;
   for (const b of $("view").children) b.classList.toggle("active", b.dataset.v === v);
   for (const id of ["mission", "district", "evals"]) $("v-" + id).hidden = id !== v;
-  $("mctl").hidden = v !== "mission";
+  $("mctl").hidden = v !== "mission"; $("back").hidden = v === "mission";
   $("diag").hidden = v !== "mission" || !diagOn;
   if (v === "district") district().catch((e) => ($("dnote").textContent = `could not load: ${e.message}`));
   if (v === "evals") evals().catch((e) => ($("v-evals").innerHTML = `<div class="banner">Could not load evals: ${esc(e.message)}</div>`));
   if (v === "mission") resize();
 }
-for (const b of $("view").children) b.onclick = () => show(b.dataset.v);
+for (const b of $("view").children) b.onclick = () => { show(b.dataset.v); $("more").hidePopover(); };
+$("back").onclick = () => show("mission");
+// side panel: one view at a time; a new payment while another tab is open shows a count on Phones
+let tab = "phones", unseen = 0;
+function showTab(t) {
+  tab = t;
+  for (const b of $("tabs").children) b.classList.toggle("active", b.dataset.t === t);
+  for (const el of $("right").querySelectorAll(".scroll[data-t]")) el.hidden = el.dataset.t !== t;
+  if (t === "phones") unseen = 0;
+  badge();
+  const box = $("right").querySelector(`.scroll[data-t="${t}"]`);
+  if (t !== "fields") box.scrollTop = box.scrollHeight;
+}
+function badge() { $("tabs").children[0].textContent = unseen ? `Phones ${unseen}` : "Phones"; }
+for (const b of $("tabs").children) b.onclick = () => showTab(b.dataset.t);
 for (const b of $("dplan").children) b.onclick = () => { plan = b.dataset.p; for (const x of $("dplan").children) x.classList.toggle("active", x === b); district(); };
 $("dseed").innerHTML = Array.from({ length: 12 }, (_, i) => `<option value="${i + 11}">district ${i + 11}</option>`).join("");
 $("dseed").onchange = () => district();
@@ -1529,11 +1580,11 @@ function updateTrail() {
   if (path.length === trail.n) return;
   trail.n = path.length;
   const top = path.map(([x, y], i) => P(x, y, trail.alts[i] * EX));
-  trail.geometry.setFromPoints(top);
+  trail.geometry.dispose(); trail.geometry = new THREE.BufferGeometry().setFromPoints(top);
   const v = new Float32Array(path.length * 6), c = new Float32Array(path.length * 8), idx = [];
   path.forEach(([x, y], i) => {
     v.set([top[i].x, top[i].y, top[i].z, top[i].x, h0(x, y) * EX + 0.5, top[i].z], i * 6);
-    c.set([1, 1, 1, 0.16, 1, 1, 1, 0.0], i * 8);
+    c.set([1, 1, 1, 0.07, 1, 1, 1, 0.0], i * 8);
     if (i) idx.push(2 * i - 2, 2 * i - 1, 2 * i, 2 * i - 1, 2 * i + 1, 2 * i);
   });
   const g = new THREE.BufferGeometry();
@@ -1670,13 +1721,19 @@ for (const b of $("exag").children) b.onclick = () => {
   if (S.world) build();
 };
 const prevLook = new THREE.Vector3();
+let auto = true; // chase the drone while it flies, show the whole map when the mission ends, unless the viewer took over
+for (const b of $("camMode").children) b.addEventListener("click", () => (auto = false));
 function steer(dt) {
   const k = calm ? 1 : 1 - Math.exp(-dt * 3);
+  if (auto && !touched) {
+    if (S.pose && !S.done && drone.visible && mode !== "follow") setMode("follow");
+    if (S.done && mode === "follow") setMode("orbit");
+  }
   if (mode === "follow" && S.pose && drone.visible) {
     const back = new THREE.Vector3(-Math.cos(S.pose.yaw), 0, -Math.sin(S.pose.yaw));
     prevLook.copy(controls.target);
     controls.target.lerp(drone.position, k);
-    if (!touched) camera.position.lerp(drone.position.clone().addScaledVector(back, 380).setY(drone.position.y + 240), k);
+    if (!touched) camera.position.lerp(drone.position.clone().addScaledVector(back, 480).setY(drone.position.y + 640), k);
     else camera.position.add(controls.target.clone().sub(prevLook));
   } else if (fly) {
     camera.position.lerp(fly.pos, k); controls.target.lerp(fly.look, k);
