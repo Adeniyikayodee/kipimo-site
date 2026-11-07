@@ -193,7 +193,32 @@ tr.focus td { background: rgba(10, 132, 255, .12); }
 .pill.paid { background: rgba(48, 209, 88, .18); color: var(--green); }
 .pill.refused { background: rgba(255, 214, 10, .16); color: var(--yellow); }
 .pill.surveying { background: rgba(10, 132, 255, .2); color: #409cff; }
-.pill.review { background: rgba(255, 69, 58, .18); color: var(--red); }
+.pill.review, .pill.rejected { background: rgba(255, 69, 58, .18); color: var(--red); }
+.pill.signoff { background: rgba(10, 132, 255, .2); color: #409cff; }
+#review { padding: 4px 14px 14px; display: flex; flex-direction: column; gap: 12px; }
+#review .head { display: flex; gap: 10px; align-items: center; color: var(--label-2); font-size: 12px; }
+#review .head .btn { margin-left: auto; }
+.case { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; }
+.case.busy { opacity: .5; pointer-events: none; }
+.case .to { display: flex; gap: 6px; align-items: baseline; color: var(--label-2); font-size: 11px; }
+.case .to b { color: var(--label); font-size: 13px; font-weight: 600; }
+.case .to time { margin-left: auto; color: var(--label-3); }
+.case .ask { margin: 6px 0 8px; font-size: 14px; }
+.case .ask b { font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
+.case .ask span { display: block; color: var(--label-2); font-size: 12px; }
+.case .nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; font-size: 12px; color: var(--label-2); }
+.case .nums b { color: var(--label); font-weight: 600; }
+.case .flags { margin: 8px 0 0; padding: 0; list-style: none; font-size: 12px; }
+.case .flags li { padding: 2px 0 2px 14px; position: relative; }
+.case .flags li::before { content: ""; position: absolute; left: 2px; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); }
+.case .clean { margin: 8px 0 0; font-size: 12px; color: var(--green); }
+.case .act { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.case .why { display: flex; gap: 8px; margin-top: 8px; }
+.case .why input { flex: 1; min-width: 0; background: var(--fill-2); color: var(--label); border: 1px solid var(--sep); border-radius: 8px; padding: 5px 9px; font: inherit; }
+.case .why input:invalid:focus { border-color: var(--red); }
+.btn.danger { color: var(--red); }
+.done-line { font-size: 12px; color: var(--label-2); padding-left: 4px; }
+.done-line b { color: var(--label); font-weight: 600; }
 .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 4px 16px 12px; }
 .facts div { background: var(--fill-2); border-radius: 12px; padding: 10px 12px; }
 .facts small, .facts span { display: block; color: var(--label-2); font-size: 11px; }
@@ -369,7 +394,7 @@ canvas#dmap { background: #111113; border-radius: 10px; }
       <div class="sh"><div><h3 id="shTitle"></h3><span id="shSub"></span></div><span id="shPill"></span><button id="shClose" aria-label="Close details">✕</button></div>
       <div class="scroll" id="shBody"></div>
     </aside>
-    <h2><span class="seg" id="tabs" role="tablist" aria-label="Side panel"><button class="active" data-t="phones">Phones</button><button data-t="fields">Fields</button><button data-t="log">Log</button></span><span class="note" id="claimNote"></span></h2>
+    <h2><span class="seg" id="tabs" role="tablist" aria-label="Side panel"><button class="active" data-t="phones">Phones</button><button data-t="fields">Fields</button><button data-t="actuary">Actuary</button><button data-t="log">Log</button></span><span class="note" id="claimNote"></span></h2>
     <div class="scroll" id="claimScroll" data-t="phones"><div id="claims" role="log" aria-live="polite"></div></div>
     <div class="scroll" id="fieldScroll" data-t="fields" hidden>
       <p class="cap">Most money in doubt first. Pays at <span id="gateV">80%</span> confidence.</p>
@@ -378,6 +403,7 @@ canvas#dmap { background: #111113; border-radius: 10px; }
         <tbody id="parcels"></tbody>
       </table>
     </div>
+    <div class="scroll" id="reviewScroll" data-t="actuary" hidden><div id="review" aria-live="polite"></div></div>
     <div class="scroll" id="traceScroll" data-t="log" hidden><div id="log"></div></div>
   </section>
 </main>
@@ -424,7 +450,9 @@ const words = (s) => String(s).replace(/_/g, " ");
 const b64u8 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 const clock = (t) => { t = Math.max(0, Math.round(t)); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
 const PILOT = { agents: "3 agents", agent: "agent", infogain: "planner", lawnmower: "lawnmower" };
-const STATUS = { paid: "Paid", refused: "Look again", surveying: "Surveying", review: "With a person", "": "Waiting" };
+const STATUS = { paid: "Paid", signoff: "With the actuary", rejected: "Rejected", refused: "Look again", surveying: "Surveying", review: "With a person", "": "Waiting" };
+// A claim is paid once the actuary approves it. Runs recorded before sign-off count it paid when signed.
+const payState = (c) => (!c ? "" : c.approved ? "paid" : c.rejected ? "rejected" : "signoff");
 const REASON = { objective_met: "every parcel is confident enough", diminishing_returns: "more flying would not change a payout", distance_budget: "flight distance used up",
   battery_reserve: "battery at its reserve", replan_limit: "too many replans", insufficient_confidence: "not confident enough", no_trigger: "loss below the first tier", already_issued: "already paid" };
 const reason = (r) => REASON[r] || words(r);
@@ -440,6 +468,7 @@ function fresh() {
     uplink: { state: "online", depth: 0, bytes: 0, settled: 0, pkt: 0 },
     perception: null, sensorDegraded: false, events: 0, head: "", t: 0, policy: "", gate: 0.8,
     sortieStart: 0, done: false, first: null, thread: [], lang: {},
+    approval: null, replay: false, review: new Map(), decided: [], busy: new Set(), rejecting: null, draft: "",
   };
 }
 fresh();
@@ -670,14 +699,15 @@ function renderSheet() {
   sh.hidden = !q;
   if (!q) return;
   const row = S.frame?.situation.parcels.find((p) => p.id === sel), c = S.claims.get(sel), k = S.cases.get(sel);
-  const st = c ? "paid" : k && k.steps.at(-1).tone === "bad" ? "review" : S.refused.has(sel) ? "refused" : S.focus.has(sel) ? "surveying" : "";
+  const st = c ? payState(c) : k && k.steps.at(-1).tone === "bad" ? "review" : S.refused.has(sel) ? "refused" : S.focus.has(sel) ? "surveying" : "";
   const pct = (v) => Math.round(v * 100) + "%", gate = pct(S.gate);
   $("shTitle").textContent = `${q.id} · ${q.holder}`;
   $("shSub").textContent = `${q.crop}, planted ${q.age_days} days before the flood, insured for ${fmtKES(q.sum_insured)}`;
   $("shPill").className = "pill " + st;
   $("shPill").textContent = STATUS[st];
   if (!row) { $("shBody").innerHTML = '<p class="reason">Details appear once the drone starts its survey.</p>'; return; }
-  const why = c ? `Paid at the ${pct(c.tier)} tier. The drone measured ${pct(row.loss)} crop loss and was ${pct(c.confidence)} sure, above the ${gate} bar.`
+  const why = c && !c.approved ? (c.rejected ? "The actuary rejected this claim. Nothing was paid." : `A claim for ${fmtKES(c.amount)} is signed. It is paid once the actuary approves it.`)
+    : c ? `Paid at the ${pct(c.tier)} tier. The drone measured ${pct(row.loss)} crop loss and was ${pct(c.confidence)} sure, above the ${gate} bar.`
     : S.refused.has(sel) ? `Held back at ${pct(S.refused.get(sel))} confidence, below the ${gate} bar. The drone goes back for a closer look.`
     : row.confidence >= S.gate ? (row.payout_at_estimate ? `Confident enough at ${pct(row.confidence)}. A claim for ${fmtKES(row.payout_at_estimate)} will be signed.` : `Confident at ${pct(row.confidence)} that the loss is below the first payout tier. Nothing is owed.`)
     : `The drone has seen ${pct(row.coverage)} of this field. A payout needs ${gate} confidence; it is at ${pct(row.confidence)}.`;
@@ -685,7 +715,7 @@ function renderSheet() {
   $("shBody").innerHTML = `<div class="facts">
       <div><small>Crop loss</small><b>${pct(row.loss)}</b><span>likely ${pct(row.ci95[0])} to ${pct(row.ci95[1])}</span></div>
       <div><small>Confidence</small><b>${pct(row.confidence)}</b><span>pays at ${gate}</span></div>
-      <div><small>${c ? "Paid" : "Payout"}</small><b>${c ? fmtKES(c.amount) : row.payout_at_estimate ? fmtKES(row.payout_at_estimate) : "None"}</b><span>${c ? (c.status === "sent" ? "delivered by SMS" : "queued to send") : "if the estimate holds"}</span></div>
+      <div><small>${c?.approved ? "Paid" : c ? "Claim" : "Payout"}</small><b>${c ? fmtKES(c.amount) : row.payout_at_estimate ? fmtKES(row.payout_at_estimate) : "None"}</b><span>${c ? (c.status === "sent" ? "delivered by SMS" : "queued to send") : "if the estimate holds"}</span></div>
     </div>
     <p class="reason">${why}</p>
     ${steps ? `<div class="sub-h">Claim</div><ul class="timeline">${steps}${c ? `<li class="${c.status === "sent" ? "ok" : ""}">${c.claim_id}, ${c.bytes ? c.bytes + " bytes, " : ""}${c.status === "sent" ? "delivered" : "waiting for signal"}</li>` : ""}</ul>` : ""}`;
@@ -718,11 +748,12 @@ function onEvent(ev) {
     case "SESSION_ERROR": status(`Run stopped: ${d.error}`); return;
     case "COMMAND_ERROR": status(`Not done: ${ev.data}`); return;
     case "SESSION_RESET":
-      fresh(); $("finish").hidden = true; $("log").innerHTML = ""; paused = false; armed = false; unseen = 0; badge(); renderClaims(); S.policy = d.policy; $("overlay").style.display = "none";
+      fresh(); $("finish").hidden = true; $("log").innerHTML = ""; paused = false; armed = false; unseen = 0; badge(); renderClaims(); renderReview(); S.policy = d.policy; S.replay = !!d.replay; $("overlay").style.display = "none";
       if (d.replay) log("", "replay", `${esc(words(d.replay))}, recorded run`);
       break;
-    case "EPISODE_START": S.policy = d.policy; break;
+    case "EPISODE_START": S.policy = d.policy; S.approval = d.approval || null; renderReview(); break;
     case "WORLD_INFO":
+      if (d.approval) { S.approval = d.approval; renderReview(); }
       if (sel && !d.parcels.some((p) => p.id === sel)) select(null);
       S.world = d; S.pmap = b64u8(d.parcel_map); pmapCanvas = null;
       S.layers.truth = gridCanvas(b64u8(d.truth), d.grid, lossColor);
@@ -761,6 +792,33 @@ function onEvent(ev) {
     case "FARMER_REPORT": log(d.suspicious ? "bad" : d.conflict ? "warn" : "", "farmer", `${d.parcel} reports <b>${d.severity}</b>${d.where && d.where !== "unknown" ? ", " + words(d.where) : ""}${d.suspicious ? ", flagged suspicious" : ""}${d.discounted ? ", discounted: record of overstating" : d.doubted ? ", conflicts with estimate: flagged for a look" : ""}`); break;
     case "FLIGHT_SET": log("", "flight", `${d.altitude_m} m, ${d.speed_mps} m/s, camera ${d.quality.toFixed(2)}<span class="why">${esc(d.reason)}</span>`); break;
     case "WAITED": log("warn", "weather", `holding ${d.minutes} min at the pad${d.wind != null ? `, wind ${d.wind} m/s` : ""}<span class="why">${esc(d.reason)}</span>`); status(d.wind != null ? `Holding at the pad for the flight window, wind ${d.wind} m/s` : "Holding at the pad"); break;
+    case "CLAIM_AWAITING_APPROVAL": {
+      S.review.set(d.case_id, { ...d, t: S.t });
+      const f = d.facts, n = d.flags.length;
+      log(n ? "warn" : "", "actuary", d.subject === "hold" ? `${d.parcel} <b>waits for the actuary</b>: the adjuster still holds it under ${esc(d.rule_id)}` : `${d.parcel} reached the insurer: <b>${fmtKES(f.amount)}</b> waits for sign-off${n ? `, ${n} flag${n > 1 ? "s" : ""}` : ", no flags"}`);
+      if (tab !== "actuary") status(`${S.review.size} claim${S.review.size > 1 ? "s" : ""} waiting for the actuary`);
+      renderReview(); break;
+    }
+    case "ACTUARY_DECISION": {
+      const x = d.decision, ok = x.decision === "approve", c = S.claims.get(x.parcel_id);
+      S.review.delete(x.case_id); S.busy.delete(x.case_id); if (S.rejecting === x.case_id) S.rejecting = null;
+      S.decided.push(x);
+      if (x.subject === "hold") {
+        step(x.parcel_id, ok ? `hold released by ${x.by}` : `hold kept by ${x.by}: ${x.note}`, ok ? "ok" : "bad");
+        log(ok ? "ok" : "bad", "actuary", `${x.parcel_id} hold <b>${ok ? "released" : "kept"}</b> by ${esc(x.by)}${x.note ? `<span class="why">${esc(x.note)}</span>` : ""}`);
+      } else if (c && ok) {
+        c.approved = true; c.fresh = true; S.paidTotal += c.amount;
+        S.thread.push({ pid: x.parcel_id, sms: true }); if (tab !== "phones") { unseen++; badge(); }
+        step(x.parcel_id, `approved by ${x.by}, paid`, "ok");
+        log("ok", "actuary", `<b>Approved</b> ${x.parcel_id}: paid ${esc(c.holder)} <b>${fmtKES(c.amount)}</b>. Signed by ${esc(x.by)}`);
+      } else if (c) {
+        c.rejected = true;
+        step(x.parcel_id, `rejected by ${x.by}: ${x.note}`, "bad");
+        log("bad", "actuary", `<b>Rejected</b> ${x.parcel_id} by ${esc(x.by)}<span class="why">${esc(x.note)}</span>`);
+      }
+      status(S.review.size ? `${S.review.size} claim${S.review.size > 1 ? "s" : ""} waiting for the actuary` : "Every claim has a decision");
+      renderClaims(); renderReview(); break;
+    }
     case "CLAIM_ESCALATED": step(d.parcel, "with a person", "bad"); log("bad", "adjuster", `${d.parcel} <b>handed to a person</b> after ${d.rounds} rounds under ${esc(d.rule_id)}`); break;
     case "MEMORY_UPDATED": log("", "memory", `learned from ${d.scored} settled reports, ${d.farmers} farmers on record`); break;
     case "SMS_SENT": log("ok", "sms out", `${d.parcel}: ${esc(d.text)}`); break;
@@ -778,7 +836,13 @@ function onEvent(ev) {
       break;
     }
     case "CLAIM_ISSUED": {
-      const c = d.claim; S.first ??= S.t; S.claims.set(c.parcel_id, { ...c, pubkey: d.pubkey, status: "queued", bytes: null, verified: null, fresh: true }); S.paidTotal += c.amount;
+      const c = d.claim; S.first ??= S.t; S.claims.set(c.parcel_id, { ...c, pubkey: d.pubkey, status: "queued", bytes: null, verified: null, fresh: true, approved: !S.approval });
+      if (S.approval) {
+        step(c.parcel_id, "claim signed, sent to the actuary", "ok");
+        log("ok", "payout", `Signed ${esc(c.holder)}'s claim for <b>${fmtKES(c.amount)}</b> on ${c.parcel_id}, ${Math.round(c.tier * 100)}% tier, ${Math.round(c.confidence * 100)}% sure. The actuary signs off before money moves`);
+        renderClaims(); break;
+      }
+      S.paidTotal += c.amount;
       S.thread.push({ pid: c.parcel_id, sms: true }); if (tab !== "phones") { unseen++; badge(); }
       step(c.parcel_id, "claim signed", "ok");
       log("ok", "payout", `Paid ${esc(c.holder)} <b>${fmtKES(c.amount)}</b> for ${c.parcel_id}, ${Math.round(c.tier * 100)}% tier, ${Math.round(c.confidence * 100)}% sure`);
@@ -804,8 +868,8 @@ function onEvent(ev) {
     case "EPISODE_END":
       if (!SITE) loadRecordings();
       S.done = true; S.focus = new Set(); S.lanes = []; S.activeLane = null;
-      log("ok", "mission", `Complete: ${(d.distance_m / 1000).toFixed(1)} km, ${d.claims} paid, payout error ${d.payout_mae_pct.toFixed(2)}% of sum insured`);
-      status(`Mission complete. ${d.claims} farmers paid`);
+      log("ok", "mission", `Complete: ${(d.distance_m / 1000).toFixed(1)} km, ${d.claims} ${S.approval ? "claims signed" : "paid"}, payout error ${d.payout_mae_pct.toFixed(2)}% of sum insured`);
+      status(S.approval ? `Mission complete. ${d.claims} claims go to the actuary` : `Mission complete. ${d.claims} farmers paid`);
       finish(d); legend();
       break;
   }
@@ -813,9 +877,11 @@ function onEvent(ev) {
 }
 function finish(d) {
   const min = Math.max(1, Math.round(d.duration_s / 60)), plural = (k, w) => `${k} ${w}${k === 1 ? "" : "s"}`;
-  $("finLede").textContent = d.claims ? `${plural(d.claims, "farmer")} paid ${fmtKES(S.paidTotal)} in ${min} minutes.` : `No payouts were due. Checked in ${min} minutes.`;
+  $("finLede").textContent = !d.claims ? `No payouts were due. Checked in ${min} minutes.`
+    : S.approval ? `${plural(d.claims, "claim")} signed in ${min} minutes. Each one is paid once the actuary approves it.`
+    : `${plural(d.claims, "farmer")} paid ${fmtKES(S.paidTotal)} in ${min} minutes.`;
   $("finGrid").innerHTML = [
-    [d.claims, "farmers paid"], [d.first_claim_s == null ? "-" : Math.max(1, Math.round(d.first_claim_s / 60)) + " min", "to first payout"], [(d.distance_m / 1000).toFixed(1) + " km", "flown"],
+    [d.claims, S.approval ? "claims signed" : "farmers paid"], [d.first_claim_s == null ? "-" : Math.max(1, Math.round(d.first_claim_s / 60)) + " min", S.approval ? "to first claim" : "to first payout"], [(d.distance_m / 1000).toFixed(1) + " km", "flown"],
     [d.missed_claims ?? "-", "owed but missed"], [d.wrong_claims ?? "-", "wrong amounts"], [d.payout_mae_pct.toFixed(2) + "%", "payout error"],
   ].map(([v, k]) => `<div><b>${v}</b><small>${k}</small></div>`).join("");
   $("finish").hidden = false;
@@ -904,7 +970,7 @@ function renderParcels() {
   $("parcels").innerHTML = f.situation.parcels.map((p) => {
     const conf = p.confidence, gate = S.gate, pass = conf >= gate;
     const claimed = S.claims.has(p.id), refused = S.refused.has(p.id) && !claimed, focus = S.focus.has(p.id);
-    const st = claimed ? "paid" : refused ? "refused" : focus ? "surveying" : "", c = S.claims.get(p.id);
+    const c = S.claims.get(p.id), st = claimed ? payState(c) : refused ? "refused" : focus ? "surveying" : "";
     const lo = p.ci95[0] * 100, hi = p.ci95[1] * 100;
     return `<tr data-id="${p.id}" tabindex="0" class="${focus ? "focus" : ""}${p.id === sel ? " sel" : ""}" aria-selected="${p.id === sel}"><td><b>${p.id}</b> <span class="muted crop">${p.crop}</span></td><td>${esc(holders[p.id] || "")}</td>
       <td><div style="display:flex;align-items:center;gap:8px"><div class="ci"><i style="left:${lo}%;width:${Math.max(1, hi - lo)}%"></i><b style="left:${p.loss * 100}%"></b></div><span class="mono">${Math.round(p.loss * 100)}%</span></div></td>
@@ -915,9 +981,9 @@ function renderParcels() {
   }).join("");
 }
 function renderClaims() {
-  const sent = [...S.claims.values()].filter((c) => c.status === "sent").length;
+  const sent = [...S.claims.values()].filter((c) => c.status === "sent").length, paidN = [...S.claims.values()].filter((c) => c.approved).length;
   const holder = (pid) => (S.world ? S.world.parcels.find((p) => p.id === pid)?.holder || "" : "");
-  $("claimNote").textContent = S.claims.size ? `${S.claims.size} paid, ${sent} delivered` : "";
+  $("claimNote").textContent = S.claims.size ? `${paidN} paid, ${sent} delivered${S.review.size ? `, ${S.review.size} with the actuary` : ""}` : "";
   const box = $("claimScroll"), stick = box.scrollTop + box.clientHeight >= box.scrollHeight - 30;
   $("claims").innerHTML = S.thread.length ? S.thread.map((m) => {
     const name = holder(m.pid);
@@ -931,12 +997,55 @@ function renderClaims() {
       <div class="proof">${sig}${c.bytes ? `<span>${c.bytes} bytes, fits one SMS</span>` : ""}<span>rule ${c.trigger_id}, ${Math.round(c.tier * 100)}% tier</span>${del}</div></div>`;
     c.fresh = false;
     return html;
-  }).join("") : '<div class="empty"><b>No payments yet</b>When a claim is signed, the farmer\'s text appears here, with its signature checked by this browser.</div>';
+  }).join("") : '<div class="empty"><b>No payments yet</b>When the actuary approves a claim, the farmer\'s text appears here, with its signature checked by this browser.</div>';
   if (stick) box.scrollTop = box.scrollHeight;
   renderSheet();
-  $("hPaid").textContent = S.claims.size;
+  $("hPaid").textContent = paidN;
   if (shownAmount !== S.paidTotal) countUp();
 }
+function renderReview() {
+  const open = [...S.review.values()], live = !SITE && !S.replay, pct = (v) => Math.round(v * 100) + "%";
+  $("tabs").querySelector('[data-t="actuary"]').textContent = open.length ? `Actuary ${open.length}` : "Actuary";
+  if (!S.approval) {
+    $("review").innerHTML = S.policy ? '<div class="empty"><b>No sign-off in this run</b>It was recorded before the actuary step, so every signed claim was paid.</div>'
+      : '<div class="empty"><b>Actuary sign-off</b>Every signed claim waits here for a person. Flags show where to look first.</div>';
+    return;
+  }
+  const clean = open.filter((c) => c.subject === "claim" && !c.flags.length).length;
+  const card = (c) => {
+    const f = c.facts, hold = c.subject === "hold", busy = S.busy.has(c.case_id), rej = S.rejecting === c.case_id;
+    const flags = c.flags.length ? `<ul class="flags">${c.flag_text.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : '<p class="clean">No flags</p>';
+    const act = !live ? "" : rej
+      ? `<div class="why"><input id="rejNote" required maxlength="300" placeholder="Reason, required" aria-label="Reason for ${hold ? "keeping the hold" : "rejecting"}" value="${esc(S.draft)}"><button class="btn danger" data-do="confirm">${hold ? "Keep hold" : "Reject"}</button><button class="btn" data-do="cancel">Cancel</button></div>`
+      : `<div class="act"><button class="btn primary" data-do="approve">${hold ? "Release and pay" : "Approve"}</button><button class="btn" data-do="reject">${hold ? "Keep on hold" : "Reject"}</button></div>`;
+    return `<div class="case${busy ? " busy" : ""}" data-case="${esc(c.case_id)}">
+      <div class="to"><b>${esc(f.holder)}</b> ${c.parcel} · ${f.crop}<time>${clock(c.t)}</time></div>
+      <div class="ask">${hold ? `Adjuster holds under ${esc(c.rule_id)}. Release` : "Pay"} <b>${fmtKES(f.amount)}</b><span>${pct(f.share)} of ${fmtKES(f.sum_insured)} insured, rule ${f.trigger_id}, ${pct(f.tier)} tier</span></div>
+      <div class="nums"><span>Loss <b>${pct(f.loss_mean)}</b> (${pct(f.loss_ci95[0])} to ${pct(f.loss_ci95[1])})</span><span>Confidence <b>${pct(f.confidence)}</b>, bar ${pct(f.gate)}</span>
+        <span>Seen by drone <b>${pct(f.coverage)}</b></span><span>Farmer says <b>${esc(f.farmer_report || "nothing")}</b></span></div>
+      ${flags}${act}</div>`;
+  };
+  const head = open.length ? `<div class="head"><span>${open.length} waiting. Money moves only when you approve.</span>${live && clean ? `<button class="btn" data-do="clean">Approve ${clean} without flags</button>` : ""}</div>` : "";
+  const done = S.decided.slice(-8).reverse().map((x) => `<div class="done-line">${x.decision === "approve" ? "✓" : "✕"} <b>${x.parcel_id}</b> ${x.subject === "hold" ? (x.decision === "approve" ? "hold released" : "hold kept") : x.decision === "approve" ? "approved" : "rejected"} by ${esc(x.by)}${x.note ? `: ${esc(x.note)}` : ""}</div>`).join("");
+  const empty = '<div class="empty"><b>Nothing waiting</b>Claims arrive here when their text reaches the insurer.</div>';
+  $("review").innerHTML = head + (open.map(card).join("") || empty) + (done ? `<div class="sub-h" style="margin:8px 0 2px">Decided</div>${done}` : "");
+  if (S.rejecting) $("rejNote")?.focus();
+}
+$("review").addEventListener("input", (e) => { if (e.target.id === "rejNote") S.draft = e.target.value; });
+$("review").addEventListener("keydown", (e) => { if (e.target.id === "rejNote" && e.key === "Enter") e.target.closest(".case").querySelector('[data-do="confirm"]').click(); });
+$("review").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-do]"); if (!b) return;
+  const id = b.closest("[data-case]")?.dataset.case, act = b.dataset.do;
+  if (act === "clean") { send({ cmd: "approve_clean" }); return; }
+  if (act === "approve") { S.busy.add(id); send({ cmd: "decide", case_id: id, decision: "approve" }); }
+  else if (act === "reject") { S.rejecting = id; S.draft = ""; }
+  else if (act === "cancel") S.rejecting = null;
+  else if (act === "confirm") {
+    const note = S.draft.trim(); if (!note) { $("rejNote").focus(); return; }
+    S.busy.add(id); send({ cmd: "decide", case_id: id, decision: "reject", note });
+  }
+  renderReview();
+});
 function footer() {
   const b = S.battery, b0 = S.battery0 || 1;
   $("fBatt").textContent = b == null ? "-" : b.toFixed(1) + " Wh";
@@ -1627,7 +1736,7 @@ function place(el, at) {
 const paid = new Map(), rings = [];
 function updateTags() {
   for (const { q, el } of parcelTags) {
-    const c = S.claims.get(q.id), st = (c ? "paid" : S.refused.has(q.id) ? "refused" : S.focus.has(q.id) ? "focus" : "") + (sel === q.id ? " sel" : "");
+    const c = S.claims.get(q.id)?.approved ? S.claims.get(q.id) : null, st = (c ? "paid" : S.refused.has(q.id) ? "refused" : S.focus.has(q.id) ? "focus" : "") + (sel === q.id ? " sel" : "");
     if (el.dataset.st !== st) { el.className = "l3 pick " + st; el.dataset.st = st; el.querySelector("span").textContent = c ? fmtKES(c.amount) : st === "refused" ? "needs another look" : ""; }
     if (c && !paid.has(q.id)) { paid.set(q.id, true); pulse(q); }
     place(el, P(q.cx, q.cy, h0(q.cx, q.cy) * EX + 14));
